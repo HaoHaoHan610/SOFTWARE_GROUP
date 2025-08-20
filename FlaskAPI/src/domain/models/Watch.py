@@ -1,11 +1,18 @@
-
-from datetime import date
+from datetime import datetime
 
 class Watch:
-    def __init__(self, Watch_id:int, brand:str, date: date, condition:str, price:str,):
-        self.Watch_id = Watch_id
+    def __init__(
+        self,
+        watch_id: int,
+        name: str,
+        brand: str,
+        price: float,
+        created_at: datetime,
+        appraisal_report: int = None
+    ):
+        self.watch_id = watch_id
+        self.name = name
         self.brand = brand
-        self.date = date
-        self.condition = condition
         self.price = price
-        self.appraisal_report = None
+        self.created_at = created_at
+        self.appraisal_report = appraisal_report

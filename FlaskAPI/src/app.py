@@ -8,8 +8,8 @@ from config import Config
 from flasgger import Swagger
 # from config import SwaggerConfig
 from flask_swagger_ui import get_swaggerui_blueprint
-
-
+from flask_restful import Api
+from api.controllers.User_Repository import UserResource
 def create_app():
     app = Flask(__name__)
 
@@ -27,3 +27,4 @@ def create_app():
 if __name__ == "__main__":
     app = create_app()
     app.run(debug=True) 
+    api = Api(app)

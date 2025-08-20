@@ -1,9 +1,15 @@
+from datetime import date
 class User:
-    def __innit__(self, user_id: str ,user_name: str, password: str, description: str = None, status: bool = True):
+    def __init__(
+        self,
+        user_id: int,
+        username: str,
+        email: str,
+        password: str,
+        created_at: date,
+    ):
         self.user_id = user_id
-        self.user_name = user_name
+        self.username = username
+        self.email = email
         self.password = password
-        self.description = description
-        self.status = status
-        self.created_at = None
-        self.updated_at = None
+        self.created_at = created_at

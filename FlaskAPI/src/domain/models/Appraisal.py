@@ -1,15 +1,23 @@
 from datetime import date
 
 class Appraisal:
-    def __init__(self, Appraisal_id: str, Watch_id: str,
-                 Appraiser_id: str, date: date, value: float = None):
-        self.Appraisal_id = Appraisal_id
-        self.Watch_id = Watch_id
-        self.Appraiser_id = Appraiser_id
+    def __init__(
+        self,
+        appraisal_id: int,
+        watch_id: int,
+        appraiser_id: int,
+        date: date,
+        value: float = None,
+        status: str = None,
+        comments: str = None,
+        appraiser: object = None
+    ):
+        self.appraisal_id = appraisal_id
+        self.watch_id = watch_id
+        self.appraiser_id = appraiser_id
         self.value = value
         self.date = date
-        self.status = None
-        self.comments = None
-        self.appraiser = None
+        self.status = status
+        self.comments = comments
+        self.appraiser = appraiser
 
-        
