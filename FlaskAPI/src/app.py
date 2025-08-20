@@ -9,7 +9,6 @@ from flasgger import Swagger
 # from config import SwaggerConfig
 from flask_swagger_ui import get_swaggerui_blueprint
 from flask_restful import Api
-from api.controllers.User_Repository import UserResource
 def create_app():
     app = Flask(__name__)
 
