@@ -5,9 +5,9 @@ class AppraisalModel(BASE):
     __tablename__ = 'Appraisal'
     __table_args__ = {'extend_existing': True}
 
-    Id = Column(Integer,primary_key=True)
-    Watch_id = Column(Integer,ForeignKey('Watch.Id'))
+    id = Column(Integer,primary_key=True)
+    Watch_id = Column(Integer,ForeignKey('Watch.id'))
     # Appraiser_id = Column(Integer,ForeignKey("Appraiser.Id"))
-    Es_value = Column(Float) #Estimate Value
-    Auth = Column(Boolean)# Authenicity
-    Con_Note = Column(String(80))
+    es_value = Column(Float) #Estimate Value
+    auth = Column(Boolean)# Authenicity
+    con_Note = Column(String(80))

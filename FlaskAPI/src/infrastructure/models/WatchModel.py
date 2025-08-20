@@ -6,12 +6,12 @@ class WatchModel(BASE):
     __table_args__ = {'extend_existing': True}
     # replace the the first one
 
-    Id = Column(Integer, primary_key=True, nullable=False)
-    Name = Column(String(100), nullable=False)
-    Brand = Column(String(100), nullable=False)
-    Price = Column(Float, nullable=False)
-    Created_At = Column(DateTime, nullable=False)
-    Appraisal_report = Column(Integer,ForeignKey('Appraisal.Id'))
+    id = Column(Integer, primary_key=True, nullable=False)
+    name = Column(String(100), nullable=False)
+    brand = Column(String(100), nullable=False)
+    price = Column(Float, nullable=False)
+    created_at = Column(DateTime, nullable=False)
+    appraisal_report_id = Column(Integer, ForeignKey('appraisal.id'))
 
 
 # self.Watch_id = Watch_id

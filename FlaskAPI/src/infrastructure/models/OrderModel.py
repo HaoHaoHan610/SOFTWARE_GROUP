@@ -8,11 +8,11 @@ class OrderModel(BASE):
         {'extend_existing': True}
     )
 
-    User_Id = Column(Integer, ForeignKey('User.Id'), nullable=False)
-    Watch_Id = Column(Integer, ForeignKey('Watch.Id'), nullable=False)
-    Quantity = Column(Integer, nullable=False)
-    Total_Price = Column(Float, nullable=False, default=0.0)
-    Status = Column(String(50), nullable=False, default="pending")
-    Created_At = Column(DateTime, nullable=False)
-    Updated_At = Column(DateTime, nullable=False)
+    user_id = Column(Integer, ForeignKey('User.id'), nullable=False)
+    watch_Id = Column(Integer, ForeignKey('Watch.id'), nullable=False)
+    quantity = Column(Integer, nullable=False)
+    total_Price = Column(Float, nullable=False, default=0.0)
+    status = Column(String(50), nullable=False, default="pending")
+    created_At = Column(DateTime, nullable=False)
+    updated_At = Column(DateTime, nullable=False)
 
