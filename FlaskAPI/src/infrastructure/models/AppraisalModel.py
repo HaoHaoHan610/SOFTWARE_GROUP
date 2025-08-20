@@ -10,4 +10,4 @@ class AppraisalModel(BASE):
     # Appraiser_id = Column(Integer,ForeignKey("Appraiser.Id"))
     es_value = Column(Float) #Estimate Value
     auth = Column(Boolean)# Authenicity
-    con_Note = Column(String(80))
+    con_note = Column(String(80))
