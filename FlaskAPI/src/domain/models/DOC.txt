@@ -1,0 +1,6 @@
+Domain-Driven Design (DDD) is a method that prioritizes understanding and modeling the specific problem area where a software system functions. 
+It highlights the need for close collaboration.
+
+This refers to the specific subject area or problem that the software system aims to address
+
+"Design" is the process of making a plan or blueprint of a software system.
