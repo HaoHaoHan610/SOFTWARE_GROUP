@@ -34,11 +34,11 @@ class UserRepository:
         # value (id,name,password,email)
 
     def get_by_id(self, _id: int) -> Optional[UserModel]:
-        return session.query(UserModel).filter_by(id = _id)
+        return session.query(UserModel).filter_by(id = _id).first()
     # select * from user where id = _id
 
     def get_all_user(self) -> list[UserModel]:
-        self.users = session(UserModel).all()
+        self.users = self.session.query(UserModel).all()
         return self.users 
 
     def update(self,user: UserModel) -> Optional[UserModel]:
@@ -55,14 +55,7 @@ class UserRepository:
 
     def delete(self,id:int) -> None:
         new_list = []
-        for t in self._todos:
+        for t in self.users:
             if t.id != id:  # chỉ giữ lại những todo khác id
                 new_list.append(t)
-        self._todos = new_list
-
-    def delete(self, id: int) -> None:
-        new_list = []
-        for t in self._todos:
-            if t.id != id:
-                new_list.append(t)
-        self._todos = new_list
+        self.users = new_list

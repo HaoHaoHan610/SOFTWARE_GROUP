@@ -8,6 +8,7 @@ from config import Config
 from flasgger import Swagger
 # from config import SwaggerConfig
 from flask_swagger_ui import get_swaggerui_blueprint
+from api.controllers.User_Controller import bp
 from flask_restful import Api
 def create_app():
     app = Flask(__name__)
@@ -17,13 +18,16 @@ def create_app():
     except Exception as e:
         print(f"Error initializing database: {e}")
 
+    app.register_blueprint(bp)
+
     @app.route('/')
     def home():
         return '<h1>Vintage Timepiece Evaluation and Trading Platform</h1>'
     return app
 
 
+
 if __name__ == "__main__":
     app = create_app()
     app.run(debug=True) 
-    api = Api(app)
+    # api = Api(app)
