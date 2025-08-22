@@ -9,3 +9,4 @@ class TransactionModel(BASE):
     price = Column(Float,nullable=False)
     status = Column(String(80),nullable=False)
     date = Column(DateTime,nullable=False)
+    order_id = Column(Integer,nullable=False)
