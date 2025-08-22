@@ -8,7 +8,8 @@ from config import Config
 from flasgger import Swagger
 # from config import SwaggerConfig
 from flask_swagger_ui import get_swaggerui_blueprint
-from api.controllers.User_Controller import bp
+from api.controllers.User_Controller import bp as bp_user
+from api.controllers.Watch_Controller import bp as bp_watch
 from flask_restful import Api
 def create_app():
     app = Flask(__name__)
@@ -18,7 +19,8 @@ def create_app():
     except Exception as e:
         print(f"Error initializing database: {e}")
 
-    app.register_blueprint(bp)
+    app.register_blueprint(bp_user)
+    app.register_blueprint(bp_watch)
 
     @app.route('/')
     def home():

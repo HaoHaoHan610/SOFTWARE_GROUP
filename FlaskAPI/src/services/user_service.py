@@ -24,14 +24,22 @@ class UserService:
     def get_user(self,id: int): #-> Optional[UserModel]:
         return self.repository.get_by_id(id)
     
-    def update(self,id: int, username: str, email: str, password:str, created_at: Optional[datetime] = None) -> UserModel:
-        user = UserModel(
-                        id=id,
-                        username=username, 
-                        email=email,
-                        password=password,
-                        created_at=created_at
-                        )
+    def update(self, id: int, username: Optional[str] = None, email: Optional[str] = None,
+           password: Optional[str] = None, created_at: Optional[datetime] = None) -> Optional[UserModel]:
+    # lấy user gốc
+        user = self.repository.get_by_id(id)
+        if not user:
+            return None
+
+        if username is not None:
+            user.username = username
+        if email is not None:
+            user.email = email
+        if password is not None:
+            user.password = password
+        if created_at is not None:
+            user.created_at = created_at
+
         return self.repository.update(user)
     
     def list(self):

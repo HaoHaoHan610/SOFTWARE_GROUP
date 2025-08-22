@@ -34,13 +34,10 @@ def get_user(user_id):
         return jsonify({"error": "User not found"}), 404
     return response_schema.dump(user),200
 
-
-
 @bp.route("/", methods=["POST"])
 def add_user():
     data = request.get_json()
 
-    # validate input từ schema
     errors = request_schema.validate(data)
     if errors:
         return jsonify(errors), 400
@@ -52,3 +49,31 @@ def add_user():
     )
 
     return response_schema.dump(new_user), 201
+
+@bp.route("/<int:id>",methods =["PUT"])
+def update_user(id:int):
+    data = request.get_json()
+    errors = request_schema.validate(data, partial=True)
+    if errors:
+        return jsonify(errors),400
+    user = User_service.update(
+        id=id,
+        username=data.get("username"),
+        email=data.get("email"),
+        password=data.get("password"),
+        created_at=datetime.utcnow()
+    )
+
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+
+    return jsonify(response_schema.dump(user)),200
+
+@bp.route("/<int:id>", methods=["DELETE"])
+def delete_user(id: int):
+    try:
+        User_service.delete(id)
+        return jsonify({"message": f"User {id} deleted successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400

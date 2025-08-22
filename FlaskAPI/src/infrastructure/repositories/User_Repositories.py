@@ -46,16 +46,25 @@ class UserRepository:
             self.session.merge(user)
             # merge when same primary key
             self.session.commit()
+            self.session.refresh(user)
+            return user
         except Exception as e:
             self.session.rollback()
-            raise ValueError('User did not find')
+            raise e
         finally:
             self.session.close()
     # find out the way to query to database by the class added from domain
 
     def delete(self,id:int) -> None:
-        new_list = []
-        for t in self.users:
-            if t.id != id:  # chỉ giữ lại những todo khác id
-                new_list.append(t)
-        self.users = new_list
+        try:
+            user = self.session.query(UserModel).filter_by(id=id).first()
+            if not user:
+                raise ValueError("User not found")
+            
+            self.session.delete(user)
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            raise e
+        finally:
+            self.session.close()

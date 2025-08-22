@@ -16,4 +16,4 @@ class Feedback:
         self.watch_id = watch_id        # Reference to Watch.Watch_id
         self.comment = comment
         self.rating = rating            # e.g., 1-5 stars
-        self.created_at = date
+        self.created_at = created_at

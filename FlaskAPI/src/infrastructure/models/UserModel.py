@@ -7,7 +7,7 @@ class UserModel(BASE):
     __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, nullable=False)
-    username = Column(String(50), nullable=False, unique=True)
+    username = Column(String(50), nullable=False)
     email = Column(String(100), nullable=False, unique=True)
     password = Column(String(200), nullable=False)
     created_at = Column(DateTime, nullable=False)
