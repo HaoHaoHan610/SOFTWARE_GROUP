@@ -6,8 +6,14 @@ class FeedbackModel(BASE):
     __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, nullable=False)
-    watch_Id = Column(Integer, primary_key=True, nullable=False)
-    comment = Column(String(255), nullable=True)
-    rating = Column(Float, nullable=True)
-    created_At = Column(DateTime, nullable=False)
+    sender_id = Column(Integer,ForeignKey("User.id"),nullable=False)
+    receiver_id = Column(Integer,ForeignKey("User.id"),nullable=False)
+    content = Column(String(255),nullable=False)
+    created_at = Column(DateTime,nullable=False)
 
+
+# self.id=id,
+# self.sender_id=sender_id,
+# self.receiver_id=receiver_id      # Reference to Watch.Watch_id
+# self.comment = comment          # e.g., 1-5 stars
+# self.created_at = created_at
