@@ -1,15 +1,18 @@
 from datetime import date
+
 class User:
     def __init__(
         self,
-        user_id: int,
+        id: int,
         username: str,
         email: str,
         password: str,
         created_at: date,
+        role: str
     ):
-        self.user_id = user_id
+        self.id = id
         self.username = username
         self.email = email
         self.password = password
         self.created_at = created_at
+        self.role = role

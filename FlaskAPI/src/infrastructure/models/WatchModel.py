@@ -1,15 +1,15 @@
 from infrastructure.databases.base import BASE
-from sqlalchemy import Column,ForeignKey,Integer,String,DateTime,Float
+from sqlalchemy import Column, Integer, String, DateTime,ForeignKey,Float,Boolean
 
 class WatchModel(BASE):
     __tablename__ = "Watch"
     __table_args__ = {'extend_existing': True}
-    # replace the the first one
+    # replace the first one
 
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(String(100), nullable=False)
     brand = Column(String(100), nullable=False)
     price = Column(Float, nullable=False)
     created_at = Column(DateTime, nullable=False)
-    appraisal_report_id = Column(Integer)
-
+    # appraisal_report_id = Column(Integer,None)
+    existing_status = Column(Boolean,default=True,nullable=False)

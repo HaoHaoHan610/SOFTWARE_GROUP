@@ -1,57 +1,69 @@
 from sqlalchemy.orm import Session
+from domain.models.Watch import Watch
 from infrastructure.databases.mssql import session
 from infrastructure.models.WatchModel import WatchModel
-
-from typing import List, Optional
+from typing import Optional,List
 
 class WatchRepository:
     def __init__(self, session: Session = session):
-        self.watchs = []
-        self.id_counter = 1
         self.session = session
-    
-    def add(self, watch: WatchModel) -> WatchModel:
+
+    def add(self, watch: Watch) -> WatchModel:
+        watchobj = WatchModel()
+        watchobj.name = watch.name
+        watchobj.brand = watch.brand
+        watchobj.price = watch.price
+        watchobj.existing_status=watch.existing_status
+        # watchobj.appraisal_report_id = watch.appraisal_report_id
+        watchobj.created_at = watch.created_at
         try:
-            self.session.add(watch)
+            self.session.add(watchobj)
             self.session.commit()
-            #  auto inditifying id to object designed "ONLY ONE KEY"
-            self.session.refresh(watch)
-            # refresh apdation depend on database changed
-            return watch
+            self.session.refresh(watchobj)
+            return watchobj
         finally:
             self.session.close()
-        
-        # insert into watch
-        # value (id,name,password,email)
 
     def get_by_id(self, _id: int) -> Optional[WatchModel]:
-        return session.query(WatchModel).filter_by(id = _id).first()
-    # select * from watch where id = _id
+        return self.session.query(WatchModel).filter_by(id=_id).first()
 
-    def get_all_watch(self) -> list[WatchModel]:
-        self.watchs = self.session.query(WatchModel).all()
-        return self.watchs 
+    def get_all_watch(self) -> List[WatchModel]:
+        return self.session.query(WatchModel).all()
 
-    def update(self,watch: WatchModel) -> Optional[WatchModel]:
+    def update(self, watch: Watch) -> Optional[WatchModel]:
         try:
-            self.session.merge(watch)
-            # merge when same primary key
+            watchobj = self.get_by_id(watch.id)
+            if not watchobj:
+                return None
+
+            if watch.name is not None:
+                watchobj.name = watch.name
+            if watch.brand is not None:
+                watchobj.brand = watch.brand
+            if watch.price is not None:
+                watchobj.price = watch.price
+            if watch.created_at is not None:
+                watchobj.created_at = watch.created_at
+            if watch.existing_status is not None:
+                watchobj.existing_status = watch.existing_status
+            # if watch.appraisal_report_id is not None:
+            #     watchobj.appraisal_report_id = watch.appraisal_report_id
+
+            self.session.merge(watchobj)
             self.session.commit()
-            self.session.refresh(watch)
-            return watch
+            self.session.refresh(watchobj)
+            return watchobj
         except Exception as e:
             self.session.rollback()
             raise e
         finally:
             self.session.close()
-    # find out the way to query to database by the class added from domain
 
-    def delete(self,id:int) -> None:
+    def delete(self, id: int) -> None:
         try:
-            watch = self.session.query(WatchModel).filter_by(id=id).first()
+            watch = self.get_by_id(id)
             if not watch:
                 raise ValueError("Watch not found")
-            
             self.session.delete(watch)
             self.session.commit()
         except Exception as e:

@@ -1,66 +1,60 @@
 from domain.models.User import User
-from infrastructure.databases import base
-
 from sqlalchemy.orm import Session
 from infrastructure.databases.mssql import session
-
-from typing import List, Optional
-# optinal return none or model variable
-# list return [] or all entities of table
-from dotenv import load_dotenv
-# implement on RAM
-
-
 from infrastructure.models.UserModel import UserModel
+from typing import Optional
 
 class UserRepository:
     def __init__(self, session: Session = session):
-        self.users = []
-        self.id_counter = 1
         self.session = session
-    
-    def add(self, user: UserModel) -> UserModel:
+
+    def add(self, user: User) -> UserModel:
         try:
-            self.session.add(user)
+            userobj = UserModel(
+                username=user.username,
+                email=user.email,
+                password=user.password,
+                role=user.role,
+                created_at=user.created_at
+            )
+            self.session.add(userobj)
             self.session.commit()
-            #  auto inditifying id to object designed "ONLY ONE KEY"
-            self.session.refresh(user)
-            # refresh apdation depend on database changed
-            return user
+            self.session.refresh(userobj)
+            return userobj
         finally:
             self.session.close()
-        
-        # insert into user
-        # value (id,name,password,email)
 
     def get_by_id(self, _id: int) -> Optional[UserModel]:
-        return session.query(UserModel).filter_by(id = _id).first()
-    # select * from user where id = _id
+        return self.session.query(UserModel).filter_by(id=_id).first()
 
-    def get_all_user(self) -> list[UserModel]:
-        self.users = self.session.query(UserModel).all()
-        return self.users 
+    def get_all_user(self):
+        return self.session.query(UserModel).all()
 
-    def update(self,user: UserModel) -> Optional[UserModel]:
+    def update(self, user: User) -> Optional[UserModel]:
         try:
-            self.session.merge(user)
-            # merge when same primary key
+            userobj = self.get_by_id(user.id)
+            if not userobj:
+                return None
+            userobj.username = user.username
+            userobj.email = user.email
+            userobj.password = user.password
+            userobj.role = user.role
+            userobj.created_at = user.created_at
+            self.session.merge(userobj)
             self.session.commit()
-            self.session.refresh(user)
-            return user
+            self.session.refresh(userobj)
+            return userobj
         except Exception as e:
             self.session.rollback()
             raise e
         finally:
             self.session.close()
-    # find out the way to query to database by the class added from domain
 
-    def delete(self,id:int) -> None:
+    def delete(self, id: int) -> None:
         try:
-            user = self.session.query(UserModel).filter_by(id=id).first()
+            user = self.get_by_id(id)
             if not user:
                 raise ValueError("User not found")
-            
             self.session.delete(user)
             self.session.commit()
         except Exception as e:

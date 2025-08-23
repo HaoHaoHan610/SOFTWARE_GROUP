@@ -10,6 +10,7 @@ from flasgger import Swagger
 from flask_swagger_ui import get_swaggerui_blueprint
 from api.controllers.User_Controller import bp as bp_user
 from api.controllers.Watch_Controller import bp as bp_watch
+from api.controllers.Appraidal_Controller import bp as bp_appraisal
 from flask_restful import Api
 def create_app():
     app = Flask(__name__)
@@ -21,6 +22,7 @@ def create_app():
 
     app.register_blueprint(bp_user)
     app.register_blueprint(bp_watch)
+    app.register_blueprint(bp_appraisal)
 
     @app.route('/')
     def home():

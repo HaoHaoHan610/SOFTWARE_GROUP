@@ -2,35 +2,35 @@ from infrastructure.models.UserModel import UserModel
 from infrastructure.repositories.User_Repositories import UserRepository
 from domain.models.User import User
 from datetime import datetime
-from typing import Optional,List
+from typing import Optional
 
 class UserService:
     def __init__(self, repository: UserRepository):
         self.repository = repository
-    
-    def create_user(self, username: str, email: str, password:str, created_at:Optional[datetime] = None) -> UserModel:
+
+    def create_user(self, username: str, email: str, password: str, role: str,
+                    created_at: Optional[datetime] = None) -> UserModel:
         if created_at is None:
             created_at = datetime.utcnow()
 
-        user = UserModel(
+        user = User(
             id=None,
-            username=username, 
+            username=username,
             email=email,
             password=password,
-            created_at=created_at
+            created_at=created_at,
+            role=role
         )
         return self.repository.add(user)
-    
-    def get_user(self,id: int): #-> Optional[UserModel]:
+
+    def get_user(self, id: int):
         return self.repository.get_by_id(id)
-    
+
     def update(self, id: int, username: Optional[str] = None, email: Optional[str] = None,
-           password: Optional[str] = None, created_at: Optional[datetime] = None) -> Optional[UserModel]:
-    # lấy user gốc
+               password: Optional[str] = None, role: str = None, created_at: Optional[datetime] = None):
         user = self.repository.get_by_id(id)
         if not user:
             return None
-
         if username is not None:
             user.username = username
         if email is not None:
@@ -39,11 +39,12 @@ class UserService:
             user.password = password
         if created_at is not None:
             user.created_at = created_at
-
+        if role is not None:
+            user.role = role
         return self.repository.update(user)
-    
+
     def list(self):
         return self.repository.get_all_user()
-    
-    def delete(self,id: int) -> None:
+
+    def delete(self, id: int) -> None:
         self.repository.delete(id)
