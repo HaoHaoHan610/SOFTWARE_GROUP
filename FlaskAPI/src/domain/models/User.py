@@ -1,14 +1,16 @@
 from datetime import date
+from typing import Optional,List
 
 class User:
     def __init__(
         self,
         id: int,
-        username: str,
-        email: str,
-        password: str,
-        created_at: date,
-        role: str
+        username: Optional[str]=None,
+        email: Optional[str]=None,
+        password: Optional[str]=None,
+        created_at: Optional[date]=None,
+        role: Optional[str]=None,
+        address:Optional[str]=None
     ):
         self.id = id
         self.username = username
@@ -16,3 +18,4 @@ class User:
         self.password = password
         self.created_at = created_at
         self.role = role
+        self.address = address

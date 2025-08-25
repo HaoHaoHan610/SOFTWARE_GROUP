@@ -8,7 +8,10 @@ class OrderModel(BASE):
     __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, nullable=False)   # người mua
+    customer_id = Column(Integer, nullable=False)   # người mua
     status = Column(String(20), default="Pending")  # trạng thái đơn hàng
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.utcnow())
+    updated_at = Column(DateTime,nullable=False)
     quantity = Column(Integer,default=0,nullable=False)
+
+    details = relationship("OrderDetailModel", back_populates="order")

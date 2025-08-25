@@ -1,7 +1,17 @@
-import requests
+import random
+from datetime import datetime
 
-URL = "http://127.0.0.1:5000"
+brands = ["Rolex", "Omega", "Patek Philippe", "Seiko", "Casio", "Audemars Piguet"]
 
-Data = {"id": 1,"name": "hao", "email": "jkjk"}
+watches = []
+for i in range(1, 31):
+    watch = {
+        "seller_id": random.randint(1, 10),
+        "name": f"Watch {i}",
+        "brand": random.choice(brands),
+        "price": round(random.uniform(1000, 50000), 2),
+    }
+    watches.append(watch)
 
-response = requests.put(URL + )
+for w in watches:
+    print(w)

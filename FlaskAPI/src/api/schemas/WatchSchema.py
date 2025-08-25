@@ -7,9 +7,11 @@ class WatchSchemaRequest(Schema):
     created_at = fields.DateTime(required=False)
     # appraisal_report_id = fields.Int(required=False)
     existing_status = fields.Boolean(required=False)
+    seller_id = fields.Int(required=True)
 
 class WatchSchemaResponse(Schema):
     id = fields.Int(required=True)
+    seller_id=fields.Int(required=True)
     name = fields.Str(required=True)
     brand = fields.Str(required=True)
     price = fields.Float(required= True)

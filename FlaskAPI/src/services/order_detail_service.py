@@ -24,41 +24,28 @@ class Order_Detail_Service:
     def get_all(self)->list[OrderDetailModel]:
         return self.repository.get_all()
 
-    def get_by_id(self, id: int) -> Optional[OrderDetailModel]:
-        return self.repository.get_by_id(id)
+    # def get_by_id(self, id: int) -> Optional[OrderDetailModel]:
+    #     return self.repository.get_by_id(id)
 
     def get_order_watch(self, order_id: int,watch_id:int):
         return self.repository.get_by_order_watch(order_id=order_id,watch_id=watch_id)
 
-    def get_order(self,order_id:int) -> List[OrderDetailModel]:
+    def get_all_order(self,order_id:int) -> List[OrderDetailModel]:
         return self.repository.get_all_order(order_id=order_id)
 
     def update(self,
-               id:int,
                order_id:Optional[int]=None,
                watch_id:Optional[int]=None
                )->Optional[OrderDetailModel]:
         
-        detail = self.repository.get_by_id(id=id)
-        
-        if not detail:
-            return None
-        
-        if order_id is not None:
-            detail.order_id = order_id
-        if watch_id is not None:
-            detail.watch_id=watch_id
-
+        detail = self.repository.get_by_order_watch(order_id=order_id,watch_id=watch_id)
 
         return self.repository.update(detail)
 
     
-    def delete(
-            self,id:int
-    ):
-        detail = self.repository.get_by_id(id=id)
-        return self.repository.delete(detail=detail)
-    
+    def delete_order(self, id:int):
+        return self.repository.delete_order(order_id=id)
+
     def delete_order_watch(self,order_id:int,watch_id:int):
         detail = self.repository.get_by_order_watch(order_id=order_id,watch_id=watch_id)
         return self.repository.delete_by_order_and_watch(detail=detail)

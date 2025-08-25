@@ -22,6 +22,12 @@ def get_watch(id: int):
     if not watch:
         return jsonify({"error": "Watch not found"}), 404
     return response_schema.dump(watch), 200
+@bp.route("/seller/<int:seller_id>", methods=["GET"])
+def get_seller(seller_id:int):
+    watchs = Watch_service.get_seller(seller_id=seller_id)
+    if not watchs:
+        return jsonify({"error": "Seller not found"}), 404
+    return response_schema.dump(watchs,many=True), 200
 
 @bp.route("/", methods=["POST"])
 def add_watch():
@@ -33,6 +39,7 @@ def add_watch():
         name=data.get("name"),
         brand=data.get("brand"),
         price=data.get("price"),
+        seller_id=data.get("seller_id"),
         # appraisal_report_id=data.get("appraisal_report_id"),
         existing_status=data.get("existing_status", True) 
     )

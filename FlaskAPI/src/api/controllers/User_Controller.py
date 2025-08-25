@@ -37,7 +37,8 @@ def add_user():
         username=data["username"],
         email=data["email"],
         password=data["password"],
-        role=data["role"]
+        role=data["role"],
+        address=data.get("address")
     )
     return response_schema.dump(new_user), 201
 
@@ -53,7 +54,7 @@ def update_user(id: int):
         username=data.get("username"),
         email=data.get("email"),
         password=data.get("password"),
-        created_at=datetime.utcnow(),
+        address=data.get("address"),
         role=data.get("role")
     )
     if not user:
@@ -64,7 +65,7 @@ def update_user(id: int):
 @bp.route("/<int:id>", methods=["DELETE"])
 def delete_user(id: int):
     try:
-        User_service.delete(id)
+        User_service.delete(id=id)
         return jsonify({"message": f"User {id} deleted successfully"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400

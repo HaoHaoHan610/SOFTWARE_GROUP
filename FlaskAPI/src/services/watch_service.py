@@ -9,12 +9,14 @@ class WatchService:
 
     def create_watch(self, name: str, brand: str, price: float,
                      created_at: Optional[datetime] = None,
+                     seller_id:Optional[int]=None,
                     #  appraisal_report_id: Optional[int] = None,
                      existing_status: bool = True):
         if created_at is None:
             created_at = datetime.utcnow()
         watch = Watch(
             id=None,
+            seller_id=seller_id,
             name=name,
             brand=brand,
             price=price,
@@ -32,11 +34,13 @@ class WatchService:
         brand: Optional[str] = None,
         price: Optional[float] = None,
         existing_status: Optional[bool] = None,
+        seller_id:Optional[int]=None,
         created_at: Optional[datetime] = None):#,
         #appraisal_report_id: Optional[int] = None):
     
         watch = Watch(
             id=id,
+            seller_id=seller_id,
             name=name,
             brand=brand,
             price=price,
@@ -51,3 +55,6 @@ class WatchService:
 
     def delete(self, id: int) -> None:
         return self.repository.delete(id)
+    
+    def get_seller(self,seller_id:int):
+        return self.repository.get_by_seller(seller_id=seller_id)

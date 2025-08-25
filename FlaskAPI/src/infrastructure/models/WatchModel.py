@@ -1,5 +1,6 @@
 from infrastructure.databases.base import BASE
 from sqlalchemy import Column, Integer, String, DateTime,ForeignKey,Float,Boolean
+from sqlalchemy.orm import relationship
 
 class WatchModel(BASE):
     __tablename__ = "Watch"
@@ -13,3 +14,6 @@ class WatchModel(BASE):
     created_at = Column(DateTime, nullable=False)
     # appraisal_report_id = Column(Integer,None)
     existing_status = Column(Boolean,default=True,nullable=False)
+    seller_id = Column(Integer,ForeignKey("User.id"),nullable=False)
+
+    order_details = relationship("OrderDetailModel", back_populates="watch")

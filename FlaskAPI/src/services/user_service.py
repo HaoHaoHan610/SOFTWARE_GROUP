@@ -8,10 +8,9 @@ class UserService:
     def __init__(self, repository: UserRepository):
         self.repository = repository
 
-    def create_user(self, username: str, email: str, password: str, role: str,
-                    created_at: Optional[datetime] = None) -> UserModel:
-        if created_at is None:
-            created_at = datetime.utcnow()
+    def create_user(self, username: str, email: str, password: str, role: str,address:str) -> UserModel:
+        
+        created_at = datetime.utcnow()
 
         user = User(
             id=None,
@@ -19,7 +18,8 @@ class UserService:
             email=email,
             password=password,
             created_at=created_at,
-            role=role
+            role=role,
+            address=address
         )
         return self.repository.add(user)
 
@@ -27,20 +27,15 @@ class UserService:
         return self.repository.get_by_id(id)
 
     def update(self, id: int, username: Optional[str] = None, email: Optional[str] = None,
-               password: Optional[str] = None, role: str = None, created_at: Optional[datetime] = None):
-        user = self.repository.get_by_id(id)
-        if not user:
-            return None
-        if username is not None:
-            user.username = username
-        if email is not None:
-            user.email = email
-        if password is not None:
-            user.password = password
-        if created_at is not None:
-            user.created_at = created_at
-        if role is not None:
-            user.role = role
+               password: Optional[str] = None, role: Optional[str] = None,address:Optional[str]=None):
+        user = User(
+            id=id,
+            username=username,
+            email=email,
+            password=password,
+            role=role,
+            address=address
+        )
         return self.repository.update(user)
 
     def list(self):

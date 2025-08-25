@@ -15,7 +15,8 @@ class UserRepository:
                 email=user.email,
                 password=user.password,
                 role=user.role,
-                created_at=user.created_at
+                created_at=user.created_at,
+                address = user.address
             )
             self.session.add(userobj)
             self.session.commit()
@@ -35,12 +36,20 @@ class UserRepository:
             userobj = self.get_by_id(user.id)
             if not userobj:
                 return None
-            userobj.username = user.username
-            userobj.email = user.email
-            userobj.password = user.password
-            userobj.role = user.role
-            userobj.created_at = user.created_at
-            self.session.merge(userobj)
+            
+            if user.username is not None:
+                userobj.username = user.username
+            if user.email is not None:
+                userobj.email = user.email
+            if user.password is not None:
+                userobj.password = user.password
+            if user.role is not None:    
+                userobj.role = user.role
+            if user.created_at is not None:
+                user.address = user.created_at
+            if user.address is not None:
+                userobj.address = user.address
+
             self.session.commit()
             self.session.refresh(userobj)
             return userobj
@@ -51,14 +60,12 @@ class UserRepository:
             self.session.close()
 
     def delete(self, id: int) -> None:
+        user = self.get_by_id(id)
+        if not user:
+            raise ValueError("User not found")
         try:
-            user = self.get_by_id(id)
-            if not user:
-                raise ValueError("User not found")
             self.session.delete(user)
             self.session.commit()
         except Exception as e:
             self.session.rollback()
             raise e
-        finally:
-            self.session.close()

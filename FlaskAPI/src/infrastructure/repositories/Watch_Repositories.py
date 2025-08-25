@@ -14,6 +14,7 @@ class WatchRepository:
         watchobj.brand = watch.brand
         watchobj.price = watch.price
         watchobj.existing_status=watch.existing_status
+        watchobj.seller_id = watch.seller_id
         # watchobj.appraisal_report_id = watch.appraisal_report_id
         watchobj.created_at = watch.created_at
         try:
@@ -29,6 +30,9 @@ class WatchRepository:
 
     def get_all_watch(self) -> List[WatchModel]:
         return self.session.query(WatchModel).all()
+    
+    def get_by_seller(self,seller_id)->list[WatchModel]:
+        return self.session.query(WatchModel).filter_by(seller_id=seller_id).all()
 
     def update(self, watch: Watch) -> Optional[WatchModel]:
         try:

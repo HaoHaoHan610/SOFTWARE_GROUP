@@ -16,19 +16,19 @@ def get_all():
     detail = detail_service.get_all()
     return response_schema.dump(detail, many=True), 200
 
-@bp.route("/<int:id>", methods=["GET"])
-def get_detail(id: int):
-    detail = detail_service.get_by_id(id)
-    if not detail:
-        return jsonify({"error": "Details not found"}), 404
-    return response_schema.dump(detail), 200
+# @bp.route("/<int:id>", methods=["GET"])
+# def get_detail(id: int):
+#     detail = detail_service.get_by_id(id)
+#     if not detail:
+#         return jsonify({"error": "Details not found"}), 404
+#     return response_schema.dump(detail), 200
 
-@bp.route("/order/<int:order_id>")
+@bp.route("/order/<int:order_id>", methods=["GET"])
 def get_order(order_id:int):
-    detail = detail_service.get_order(order_id=order_id)
+    detail = detail_service.get_all_order(order_id=order_id)
     if not detail:
         return jsonify({"error": "Order not found"}), 404
-    return response_schema.dump(detail), 200
+    return response_schema.dump(detail,many=True), 200
 
 @bp.route("/", methods=["POST"])
 def add_detail():
@@ -49,7 +49,6 @@ def update_detail(id: int):
     if errors:
         return jsonify(errors), 400
     detail = detail_service.update(
-        id = id,
         order_id=data.get("order_id"),
         watch_id=data.get("watch_id")
     )
@@ -57,15 +56,15 @@ def update_detail(id: int):
         return jsonify({"error": "Detail not found"}), 404
     return jsonify(response_schema.dump(detail)), 200
 
-@bp.route("/<int:id>", methods=["DELETE"])
-def delete_detail(id: int):
+@bp.route("/order/<int:id>", methods=["DELETE"])
+def delete_order(id: int):
     try:
-        detail_service.delete(id)
-        return jsonify({"message": f"Detail {id} deleted successfully"}), 200
+        detail_service.delete_order(id)
+        return jsonify({"message": f"Order {id} deleted successfully"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
     
-@bp.route("/order/<int:order_id>/watch/<watch_id:int>",methods=["DELETE"])
+@bp.route("/order/<int:order_id>/watch/<int:watch_id>",methods=["DELETE"])
 def delete_order_watch(order_id:int,watch_id:int):
     try:
         detail_service.delete_order_watch(order_id=order_id,watch_id=watch_id)

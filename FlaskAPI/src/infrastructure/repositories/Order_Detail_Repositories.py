@@ -1,7 +1,9 @@
 from sqlalchemy.orm import Session
 from infrastructure.databases.mssql import session
 from infrastructure.models.Order_DetailModel import OrderDetailModel
+from infrastructure.models.OrderModel import OrderModel
 from domain.models.Order_Detail import OrderDetail
+from sqlalchemy import func
 from typing import List, Optional
 from datetime import datetime
 
@@ -11,21 +13,32 @@ class OrderDetail_Repository:
         self.session = session
 
     def add(self, order_detail: OrderDetail) -> Optional[OrderDetailModel]:
-        """Thêm order_detail mới"""
         try:
-            orderdeatil_obj = OrderDetailModel(
-                order_id = order_detail.order_id,
-                watch_id = order_detail.watch_id
-            )
-            self.session.add(orderdeatil_obj)
-            self.session.commit()
-            self.session.refresh(orderdeatil_obj)
-            return orderdeatil_obj
-        finally:
-            self.session.close()
+            existing = self.get_by_order_watch(order_detail.order_id, order_detail.watch_id)
+            if existing:
+                existing.quantity = (existing.quantity or 1) + order_detail.quantity
+                self.session.commit()
+                self.session.refresh(existing)
+                self._update_order_total(order_id=order_detail.order_id)
+                return existing
 
-    def get_by_id(self, id: int)->Optional[OrderDetailModel]:
-        return self.session.query(OrderDetailModel).filter_by(id=id).first()
+            orderdetail_obj = OrderDetailModel(
+                order_id=order_detail.order_id,
+                watch_id=order_detail.watch_id,
+            )
+            self.session.add(orderdetail_obj)
+            self.session.commit()
+            self.session.refresh(orderdetail_obj)
+            self._update_order_total(order_id=order_detail.order_id)
+            return orderdetail_obj
+
+        except Exception:
+            self.session.rollback()
+            raise
+
+
+    # def get_by_id(self, id: int)->Optional[OrderDetailModel]:
+    #     return self.session.query(OrderDetailModel).filter_by(order_id = id).first()
 
     def get_all(self)->list[OrderDetailModel]:
         return self.session.query(OrderDetailModel).all()
@@ -34,11 +47,11 @@ class OrderDetail_Repository:
         return self.session.query(OrderDetailModel).filter_by(order_id=order_id).all()
     
     def get_by_order_watch(self,order_id:int,watch_id:int)->Optional[OrderDetailModel]:
-        return self.session.query(OrderDetailModel).filter_by(order_id=order_id,watch_id=watch_id)
+        return self.session.query(OrderDetailModel).filter_by(order_id=order_id,watch_id=watch_id).first()
 
     def update(self,order_detail:OrderDetail)->Optional[OrderDetailModel]:
         try:
-            detail_obj = self.get_by_id(id=order_detail.id)
+            detail_obj = self.get_by_order_watch(order_id=order_detail.order_id)
             if not detail_obj:
                 return None
             
@@ -47,11 +60,13 @@ class OrderDetail_Repository:
             if order_detail.watch_id is not None:
                 detail_obj.watch_id = order_detail.watch_id
             
-
             self.session.merge(detail_obj)
             self.session.commit()
             self.session.refresh(detail_obj)
-            
+                        
+            # change quantity of order when update new watch
+            self._update_order_total(detail_obj.order_id)
+
             return detail_obj
         
         except Exception:
@@ -62,13 +77,29 @@ class OrderDetail_Repository:
             self.session.close()
 
 
-    def delete(self,detail:OrderDetail)->bool:
-        try:
-            detail_obj = self.get_by_order_watch(order_id=detail.id)
+    # def delete(self,detail:OrderDetail)->bool:
+    #     try:
+    #         detail_obj = self.get_by_order_watch(order_id=detail.id)
 
-            if detail_obj:
-                self.session.delete(detail_obj)
+    #         if detail_obj:
+    #             self.session.delete(detail_obj)
+    #             self.session.commit()
+    #             return True
+    #         return False
+    #     except Exception:
+    #         self.session.rollback()
+    #         raise
+    #     finally:
+    #         self.session.close()
+
+    def delete_order(self, order_id: int) -> bool:
+        try:
+            details = self.session.query(OrderDetailModel).filter_by(order_id=order_id).all()
+            if details:
+                for d in details:
+                    self.session.delete(d)
                 self.session.commit()
+                self._update_order_total(order_id)
                 return True
             return False
         except Exception:
@@ -77,13 +108,18 @@ class OrderDetail_Repository:
         finally:
             self.session.close()
 
-    def delete_by_order_and_watch(self, detail:OrderDetail) -> bool:
-        """Xóa order detail theo order_id và watch_id"""
+
+
+    def delete_by_order_and_watch(self, detail: OrderDetail) -> bool:
         try:
-            detail_obj = self.get_by_order_watch(order_id=detail.order_id, watch_id=detail.watch_id)
+            detail_obj = self.get_by_order_watch(detail.order_id, detail.watch_id)
             if detail_obj:
+                order_id = detail_obj.order_id
                 self.session.delete(detail_obj)
                 self.session.commit()
+
+                # cập nhật lại tổng số lượng
+                self._update_order_total(order_id)
                 return True
             return False
         except Exception:
@@ -91,3 +127,17 @@ class OrderDetail_Repository:
             raise
         finally:
             self.session.close()
+
+
+    def _update_order_total(self, order_id: int):
+        """Cập nhật lại tổng số lượng của Order"""
+        total = (
+            self.session.query(func.coalesce(func.sum(OrderDetailModel.quantity), 0))
+            .filter_by(order_id=order_id)
+            .scalar()
+        )
+        order = self.session.query(OrderModel).filter_by(id=order_id).first()
+        if order:
+            order.quantity = total  # hoặc order.total_quantity nếu bạn dùng tên này
+            self.session.merge(order)
+            self.session.commit()
