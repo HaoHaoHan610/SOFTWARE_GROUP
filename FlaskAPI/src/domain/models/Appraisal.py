@@ -5,14 +5,14 @@ from typing import Optional
 class Appraisal:
     def __init__(
         self,
-        id:int,
-        appraiser_id: int,
-        watch_id: int,
-        es_value: float,
-        status: str,
+        id:Optional[int]=None,
+        appraiser_id: Optional[int]=None,
+        watch_id: Optional[int]=None,
+        es_value: Optional[float]=None,
+        status: Optional[str]=None,
         auth: Optional[str] = None,
         con_note: Optional[str] = None,
-        created_at: Optional[datetime] = None,
+        # created_at: Optional[datetime] = None,
         updated_at: Optional[datetime] = None,
     ):
         self.id = id
@@ -22,5 +22,5 @@ class Appraisal:
         self.status = status
         self.auth = auth
         self.con_note = con_note
-        self.created_at = created_at or datetime.utcnow()
-        self.updated_at = updated_at or datetime.utcnow()
+        self.created_at = datetime.utcnow()
+        self.updated_at = updated_at

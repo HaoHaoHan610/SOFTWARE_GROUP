@@ -81,13 +81,42 @@ def update_appraisal(id:int):
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+@bp.route("/appraiser/<int:appraiser_id>/watch/<int:watch_id>", methods=["PUT"])
+def update_a_w(appraiser_id:int,watch_id:int):
+    data = request.get_json()
+    errors = request_schema.validate(data, partial=True)  # cho phép update 1 phần
+    if errors:
+        return jsonify(errors), 400
 
+    try:
+        updated = appraisal_service.update_appraisal_a_w(
+            watch_id=watch_id,
+            appraiser_id=appraiser_id,
+            status=data.get("status"),
+            con_note=data.get("con_note"),
+            es_value=data.get("es_value"),
+            auth=data.get("auth")
+        )
+        if not updated:
+            return jsonify({"error": "Appraisal not found"}), 404
+        return jsonify(response_schema.dump(updated)), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 
 # ----------------------
 # DELETE appraisal by appraiser + watch
 # ----------------------
-@bp.route("/", methods=["DELETE"])
-def delete_appraisal(appraiser_id: int, watch_id: int):
+
+@bp.route("/<int:id>", methods=["DELETE"])
+def delete_appraisal(id:int):
+    success = appraisal_service.delete_appraisal(id=id)
+    if success:
+        return jsonify({"message": "Appraisal deleted successfully"}), 200
+    return jsonify({"error": "Appraisal not found"}), 404
+
+
+@bp.route("/appraiser/<int:appraiser_id>/watch/<int:watch_id>", methods=["DELETE"])
+def delete_appraisal_a_w(appraiser_id: int, watch_id: int):
     success = appraisal_service.delete_appraisal_a_w(appraiser_id=appraiser_id, watch_id=watch_id)
     if success:
         return jsonify({"message": "Appraisal deleted successfully"}), 200
@@ -105,3 +134,8 @@ def get_appraisals_by_watch(watch_id: int):
 def get_appraisals_by_appraiser(appraiser_id: int):
     appraisals = appraisal_service.get_appraisal_each_appraiser(appraiser_id=appraiser_id)
     return jsonify(response_schema.dump(appraisals, many=True)), 200
+
+@bp.route("/appraiser/<int:appraiser_id>/watch/<int:watch_id>", methods=["GET"])
+def get_appraisals_by_a_w(appraiser_id: int,watch_id:int):
+    appraisals = appraisal_service.get_appraisals_a_w(appraiser_id=appraiser_id,watch_id=watch_id)
+    return jsonify(response_schema.dump(appraisals)), 200

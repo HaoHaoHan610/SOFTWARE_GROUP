@@ -20,7 +20,7 @@ class AppraisalRepository:
                 con_note=appraisal.con_note,
                 status=appraisal.status,
                 es_value=appraisal.es_value,
-                created_at=datetime.utcnow(),
+                # created_at=datetime.utcnow(),
                 updated_at=datetime.utcnow()
             )
             self.session.add(appraisalobj)
@@ -49,6 +49,35 @@ class AppraisalRepository:
     def update(self, appraisal: Appraisal) -> Optional[AppraisalModel]:
         """Cập nhật appraisal"""
         try:
+            appraisalobj = self.get_by_id(
+                id=appraisal.id
+            )
+            if not appraisalobj:
+                return None
+
+            if appraisal.auth is not None:
+                appraisalobj.auth = appraisal.auth
+            if appraisal.con_note is not None:
+                appraisalobj.con_note = appraisal.con_note
+            if appraisal.es_value is not None:
+                appraisalobj.es_value = appraisal.es_value
+            if appraisal.status is not None:
+                appraisalobj.status = appraisal.status
+            
+            appraisalobj.updated_at = datetime.utcnow()
+
+            self.session.commit()
+            self.session.refresh(appraisalobj)
+            return appraisalobj
+        except Exception:
+            self.session.rollback()
+            raise ValueError("Appraisal not found or update failed")
+        finally:
+            self.session.close()
+
+    def update_a_w(self, appraisal: Appraisal) -> Optional[AppraisalModel]:
+        """Cập nhật appraisal"""
+        try:
             appraisalobj = self.get_by_id_a_w(
                 appraiser_id=appraisal.appraiser_id,
                 watch_id=appraisal.watch_id
@@ -56,10 +85,15 @@ class AppraisalRepository:
             if not appraisalobj:
                 return None
 
-            appraisalobj.auth = appraisal.auth
-            appraisalobj.con_note = appraisal.con_note
-            appraisalobj.es_value = appraisal.es_value
-            appraisalobj.status = appraisal.status
+            if appraisal.auth is not None:
+                appraisalobj.auth = appraisal.auth
+            if appraisal.con_note is not None:
+                appraisalobj.con_note = appraisal.con_note
+            if appraisal.es_value is not None:
+                appraisalobj.es_value = appraisal.es_value
+            if appraisal.status is not None:
+                appraisalobj.status = appraisal.status
+            
             appraisalobj.updated_at = datetime.utcnow()
 
             self.session.commit()
