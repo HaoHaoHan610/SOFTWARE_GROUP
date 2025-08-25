@@ -28,7 +28,7 @@ def get_user(feedback_id):
 
 
 @bp.route("/", methods=["POST"])
-def add_user():
+def add_feedbackr():
     data = request.get_json()
     errors = request_schema.validate(data)
     if errors:
@@ -38,7 +38,7 @@ def add_user():
         receiver_id=data.get("receiver_id"),
         content=data.get("content")
     )
-    return request_schema.dump(new_feedback), 201
+    return response_schema.dump(new_feedback), 201
 
 
 @bp.route("/<int:id>", methods=["PUT"])

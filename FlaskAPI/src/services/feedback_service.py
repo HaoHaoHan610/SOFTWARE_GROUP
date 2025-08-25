@@ -11,14 +11,13 @@ class FeedbackService:
     def get_all(self):
         return self.repository.get_all()
 
-    def create_feedback(self, sender_id:int,receiver_id:int,content:str,created_at:datetime=datetime.utcnow()) -> FeedbackModel:
+    def create_feedback(self, sender_id:int,receiver_id:int,content:str) -> FeedbackModel:
 
         feedback = Feedback(
             id=None,
             sender_id=sender_id,
             receiver_id=receiver_id,
             content=content,
-            created_at=created_at
         )
         return self.repository.add(feedback=feedback)
 
@@ -26,16 +25,12 @@ class FeedbackService:
         return self.repository.get_by_id(id=id)
 
     def update(self, id: int, sender_id: Optional[int] = None, receiver_id: Optional[int] = None, content: Optional[str] = None):
-        feedback = self.repository.get_by_id(id)
-        if not feedback:
-            return None
-
-        if sender_id is not None:
-            feedback.sender_id = sender_id
-        if receiver_id is not None:
-            feedback.receiver_id = receiver_id
-        if content is not None:
-            feedback.content = content
+        feedback = Feedback(
+            id=id,
+            sender_id=sender_id,
+            receiver_id=receiver_id,
+            content=content
+        )
 
         return self.repository.update(feedback)
 

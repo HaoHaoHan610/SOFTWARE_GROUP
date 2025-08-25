@@ -78,7 +78,6 @@ class FeedbackRepository:
         return self.session.query(Feedback).filter_by(receiver_id=receiver_id).all()
     
     def get_feedback_for_agent(self) -> List[FeedbackModel]:
-
         return (
             self.session.query(FeedbackModel)
             .join(UserModel, FeedbackModel.receiver_id == UserModel.id)
