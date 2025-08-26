@@ -1,49 +1,27 @@
-from infrastructure.models.TransactionModel import TransactionModel
-from infrastructure.repositories.Transaction_Repositories import TransactionRepository
-from domain.models.Transaction import Transaction
-from datetime import datetime
-from typing import Optional,List
+from infrastructure.repositories.Transaction_Repositories import TransactionRepository, EscrowRepository
+from infrastructure.models.TransactionModel import TransactionModel, EscrowModel
+from typing import Optional, List
 
 class TransactionService:
-    def __init__(self, repository: TransactionRepository):
-        self.repository = repository
-    
-    def create_transaction(self, price: str, status: str,order_id: int,created_at:Optional[datetime] = None) -> TransactionModel:
-        if created_at is None:
-            created_at = datetime.utcnow()
+    def __init__(self, transaction_repo: TransactionRepository):
+        self.transaction_repo = transaction_repo
 
-        transaction = TransactionModel(
-            id=None,
-            price = price,
-            status=status,
-            order_id= order_id,
-            date = created_at
-        )
-        return self.repository.add(transaction)
-    
-    def get_user(self,id: int): #-> Optional[UserModel]:
-        return self.repository.get_by_id(id)
-    
-    def update(self, id: int, price: Optional[float] = None, status: Optional[str] = None,
-        order_id: Optional[int] = None, created_at: Optional[datetime] = None) -> Optional[TransactionModel]:
-    # lấy user gốc
-        transaction = self.repository.get_by_id(id)
-        if not transaction:
-            return None
+    def create_transaction(self, buyer_id: int, seller_id: int, order_id: int, amount: float) -> TransactionModel:
+        return self.transaction_repo.create_transaction(buyer_id, seller_id, order_id, amount)
 
-        if price is not None:
-            transaction.price = price
-        if status is not None:
-            transaction.status = status
-        if order_id is not None:
-            transaction.order_id = order_id
-        if created_at is not None:
-            transaction.date = created_at
+    def get_transaction(self, transaction_id: int) -> Optional[TransactionModel]:
+        return self.transaction_repo.get_transaction(transaction_id)
 
-        return self.repository.update(transaction)
-    
-    def list(self):
-        return self.repository.get_all_user()
-    
-    def delete(self,id: int) -> None:
-        self.repository.delete(id)
+    def list_transactions(self) -> List[TransactionModel]:
+        return self.transaction_repo.list_transactions()
+
+
+class EscrowService:
+    def __init__(self, escrow_repo: EscrowRepository):
+        self.escrow_repo = escrow_repo
+
+    def create_escrow(self, transaction_id: int, amount: float) -> EscrowModel:
+        return self.escrow_repo.create_escrow(transaction_id, amount)
+
+    def release_escrow(self, escrow_id: int) -> Optional[EscrowModel]:
+        return self.escrow_repo.release_escrow(escrow_id)

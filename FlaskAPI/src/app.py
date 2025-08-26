@@ -14,6 +14,7 @@ from api.controllers.Appraidal_Controller import bp as bp_appraisal
 from api.controllers.Feedback_Controller import bp as bp_feedback
 from api.controllers.Order_Controller import bp as bp_order
 from api.controllers.Order_Detail_Controller import bp as bp_detail
+from api.controllers.Transaction_Controller import bp as bp_transaction
 from flask_restful import Api
 def create_app():
     app = Flask(__name__)

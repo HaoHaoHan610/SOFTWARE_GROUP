@@ -1,70 +1,62 @@
-from domain.models.Transaction import Transaction
-from infrastructure.databases import base
-
 from sqlalchemy.orm import Session
+from infrastructure.models.TransactionModel import TransactionModel, EscrowModel
+from infrastructure.models.Order_DetailModel import OrderDetailModel
 from infrastructure.databases.mssql import session
-
-from typing import List, Optional
-# optinal return none or model variable
-# list return [] or all entities of table
-from dotenv import load_dotenv
-# implement on RAM
-
-
-from infrastructure.models.TransactionModel import TransactionModel
+from typing import Optional, List
+from datetime import datetime
 
 class TransactionRepository:
     def __init__(self, session: Session = session):
-        self.transaction = []
-        self.id_counter = 1
         self.session = session
-    
-    def add(self, transaction: TransactionModel) -> TransactionModel:
-        try:
-            self.session.add(transaction)
-            self.session.commit()
-            #  auto inditifying id to object designed "ONLY ONE KEY"
-            self.session.refresh(transaction)
-            # refresh apdation depend on database changed
-            return transaction
-        finally:
-            self.session.close()
+
+    def create_transaction(self, buyer_id: int, seller_id: int, order_id: int, amount: Optional[float]=None) -> TransactionModel:
+        order_details = self.session.query(OrderDetailModel).filter_by(order_id=order_id).all()
+
+        if not order_details:
+            return None
         
-        # insert into user
-        # value (id,name,password,email)
+        total_amount = sum([detail.price for detail in order_details])
+        transaction = TransactionModel(
+            buyer_id=buyer_id,
+            seller_id=seller_id,
+            order_id=order_id,
+            amount=amount,
+            status="pending",
+            created_at=datetime.utcnow()
+        )
+        self.session.add(transaction)
+        self.session.commit()
+        self.session.refresh(transaction)
+        return transaction
 
-    def get_by_id(self, _id: int) -> Optional[TransactionModel]:
-        return session.query(TransactionModel).filter_by(id = _id).first()
-    # select * from user where id = _id
+    def get_transaction(self, transaction_id: int) -> Optional[TransactionModel]:
+        return self.session.query(TransactionModel).filter_by(id=transaction_id).first()
 
-    def get_all_user(self) -> list[TransactionModel]:
-        self.users = self.session.query(TransactionModel).all()
-        return self.users 
+    def list_transactions(self) -> List[TransactionModel]:
+        return self.session.query(TransactionModel).all()
 
-    def update(self,transaction: TransactionModel) -> Optional[TransactionModel]:
-        try:
-            self.session.merge(transaction)
-            # merge when same primary key
+
+class EscrowRepository:
+    def __init__(self, session: Session = session):
+        self.session = session
+
+    def create_escrow(self, transaction_id: int, amount: float) -> EscrowModel:
+        escrow = EscrowModel(
+            transaction_id=transaction_id,
+            amount=amount,
+            status="holding",
+            created_at=datetime.utcnow()
+        )
+        self.session.add(escrow)
+        self.session.commit()
+        self.session.refresh(escrow)
+        return escrow
+
+    def release_escrow(self, escrow_id: int) -> Optional[EscrowModel]:
+        escrow = self.session.query(EscrowModel).filter_by(id=escrow_id).first()
+        if escrow:
+            escrow.status = "released"
+            escrow.released_at = datetime.utcnow()
             self.session.commit()
-            self.session.refresh(transaction)
-            return transaction
-        except Exception as e:
-            self.session.rollback()
-            raise e
-        finally:
-            self.session.close()
-    # find out the way to query to database by the class added from domain
-
-    def delete(self,id:int) -> None:
-        try:
-            transaction = self.session.query(TransactionModel).filter_by(id=id).first()
-            if not transaction:
-                raise ValueError("User not found")
-            
-            self.session.delete(transaction)
-            self.session.commit()
-        except Exception as e:
-            self.session.rollback()
-            raise e
-        finally:
-            self.session.close()
+            self.session.refresh(escrow)
+        return escrow

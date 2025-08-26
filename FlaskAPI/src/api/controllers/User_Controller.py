@@ -37,8 +37,8 @@ def add_user():
         username=data["username"],
         email=data["email"],
         password=data["password"],
-        role=data["role"],
-        address=data.get("address")
+        role=data["role"]
+        # address=data.get("address")
     )
     return response_schema.dump(new_user), 201
 
@@ -54,7 +54,7 @@ def update_user(id: int):
         username=data.get("username"),
         email=data.get("email"),
         password=data.get("password"),
-        address=data.get("address"),
+        # address=data.get("address"),
         role=data.get("role")
     )
     if not user:

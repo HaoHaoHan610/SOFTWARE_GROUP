@@ -19,6 +19,7 @@ class OrderRepository:
                 status = "Pending",
                 created_at = datetime.utcnow(),
                 updated_at = datetime.utcnow(),
+                address = order.address,
                 quantity = order.quantity
             )
             self.session.add(orderobj)
@@ -52,10 +53,12 @@ class OrderRepository:
                 order_obj.quantity = order.quantity
             if order.status is not None:
                 order_obj.status = order.status  # thêm dòng này
+            if order.address is not None:
+                order_obj.address = order.address
 
             order_obj.updated_at = datetime.utcnow()
             
-            self.session.merge(order_obj)
+            # self.session.merge(order_obj)
             self.session.commit()
             self.session.refresh(order_obj)
             

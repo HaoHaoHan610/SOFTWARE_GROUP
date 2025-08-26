@@ -8,7 +8,7 @@ class UserService:
     def __init__(self, repository: UserRepository):
         self.repository = repository
 
-    def create_user(self, username: str, email: str, password: str, role: str,address:str) -> UserModel:
+    def create_user(self, username: str, email: str, password: str, role: str) -> UserModel:
         
         created_at = datetime.utcnow()
 
@@ -18,8 +18,7 @@ class UserService:
             email=email,
             password=password,
             created_at=created_at,
-            role=role,
-            address=address
+            role=role
         )
         return self.repository.add(user)
 
@@ -27,14 +26,13 @@ class UserService:
         return self.repository.get_by_id(id)
 
     def update(self, id: int, username: Optional[str] = None, email: Optional[str] = None,
-               password: Optional[str] = None, role: Optional[str] = None,address:Optional[str]=None):
+               password: Optional[str] = None, role: Optional[str] = None):
         user = User(
             id=id,
             username=username,
             email=email,
             password=password,
-            role=role,
-            address=address
+            role=role
         )
         return self.repository.update(user)
 

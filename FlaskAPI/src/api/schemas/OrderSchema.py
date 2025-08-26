@@ -4,6 +4,7 @@ from datetime import datetime
 class OrderRequestSchema(Schema):
     customer_id = fields.Int(required=False)
     status = fields.Str(required=False)
+    address = fields.Str(required=True)
     # items = fields.List(fields.Nested(OrderDetailRequestSchema), required=True)
 
 class OrderResponseSchema(Schema):
@@ -13,6 +14,7 @@ class OrderResponseSchema(Schema):
     created_at = fields.DateTime(required=True)
     updated_at = fields.DateTime(required=True)
     status = fields.Str(required=True)
+    address = fields.Str(required=True)
     # items = fields.List(fields.Nested(OrderDetailResponseSchema))
     # quantity = fields.Int(required=True)
 

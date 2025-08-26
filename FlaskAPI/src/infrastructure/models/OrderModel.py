@@ -13,5 +13,6 @@ class OrderModel(BASE):
     created_at = Column(DateTime, default=datetime.utcnow())
     updated_at = Column(DateTime,nullable=False)
     quantity = Column(Integer,default=0,nullable=False)
+    address = Column(String(255),nullable=False)
 
     details = relationship("OrderDetailModel", back_populates="order")

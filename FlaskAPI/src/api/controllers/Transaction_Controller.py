@@ -1,80 +1,78 @@
-from infrastructure.databases.mssql import session
-# communicate with database
-from infrastructure.models.TransactionModel import TransactionModel
-# communicate directly table in database
-from flask import Blueprint,request,jsonify
-
-from services.transaction_service import TransactionService
-from infrastructure.repositories.Transaction_Repositories import TransactionRepository
-
-from api.schemas.TransactionSchema import TransactionSchemaRequest,TransactionSchemaResopnse
-# Indentify the output data will response and request
-from datetime import datetime
+from flask import Blueprint, request, jsonify
+from services.transaction_service import TransactionService, EscrowService
+from infrastructure.repositories.Transaction_Repositories import TransactionRepository, EscrowRepository
+from api.schemas.TransactionSchema import (
+    TransactionRequestSchema, TransactionResponseSchema,
+    EscrowRequestSchema, EscrowResponseSchema
+)
 
 bp = Blueprint("transaction", __name__, url_prefix="/transactions")
 
+# Khởi tạo service
+transaction_service = TransactionService(TransactionRepository())
+escrow_service = EscrowService(EscrowRepository())
 
 
-transaction_service = TransactionService(TransactionRepository(session))
-# initializing service used by controller
-
-request_schema = TransactionSchemaRequest()
-response_schema = TransactionSchemaRequest()
-
-
-@bp.route("/all",methods =["GET"])
-def get_all():
-    user = transaction_service.list()
-    return response_schema.dump(user, many = True),400
-
-@bp.route("/<int:transaction_id>",methods =["GET"])
-def get_user(transaction_id):
-    transaction = transaction_service.get_user(transaction_id)
-    if not transaction:
-        return jsonify({"error": "transaction not found"}), 404
-    return response_schema.dump(transaction),200
-
-@bp.route("/", methods=["POST"])
-def add_user():
+# -------------------- Transaction --------------------
+@bp.route("/create", methods=["POST"])
+def create_transaction():
     data = request.get_json()
-
-    errors = request_schema.validate(data)
+    schema = TransactionRequestSchema()
+    errors = schema.validate(data)
     if errors:
         return jsonify(errors), 400
 
     transaction = transaction_service.create_transaction(
-        price = data.get("price"),
-        status=data.get("status"),
-        order_id=data.get("order_id"),
-        created_at=datetime.utcnow()
+        buyer_id=data["buyer_id"],
+        seller_id=data["seller_id"],
+        order_id=data["order_id"],
+        amount=data["amount"]
     )
 
-    return response_schema.dump(transaction), 201
+    response_schema = TransactionResponseSchema()
+    return jsonify(response_schema.dump(transaction)), 201
 
-@bp.route("/<int:id>",methods =["PUT"])
-def update_transaction(id:int):
+
+@bp.route("/<int:transaction_id>", methods=["GET"])
+def get_transaction(transaction_id):
+    transaction = transaction_service.get_transaction(transaction_id)
+    if not transaction:
+        return jsonify({"error": "Transaction not found"}), 404
+
+    response_schema = TransactionResponseSchema()
+    return jsonify(response_schema.dump(transaction)), 200
+
+
+@bp.route("/all", methods=["GET"])
+def list_transactions():
+    transactions = transaction_service.list_transactions()
+    response_schema = TransactionResponseSchema(many=True)
+    return jsonify(response_schema.dump(transactions)), 200
+
+
+# -------------------- Escrow --------------------
+@bp.route("/escrow/create", methods=["POST"])
+def create_escrow():
     data = request.get_json()
-    errors = request_schema.validate(data, partial=True)
+    schema = EscrowRequestSchema()
+    errors = schema.validate(data)
     if errors:
-        return jsonify(errors),400
-    transaction = transaction_service.update(
-        id=id,
-        price = data.get("price"),
-        status=data.get("status"),
-        order_id=data.get("order_id"),
-        created_at=datetime.utcnow()
+        return jsonify(errors), 400
+
+    escrow = escrow_service.create_escrow(
+        transaction_id=data["transaction_id"],
+        amount=data["amount"]
     )
 
-    if not user:
-        return jsonify({"error": "User not found"}), 404
+    response_schema = EscrowResponseSchema()
+    return jsonify(response_schema.dump(escrow)), 201
 
 
-    return jsonify(response_schema.dump(user)),200
+@bp.route("/escrow/release/<int:escrow_id>", methods=["PUT"])
+def release_escrow(escrow_id):
+    escrow = escrow_service.release_escrow(escrow_id)
+    if not escrow:
+        return jsonify({"error": "Escrow not found"}), 404
 
-@bp.route("/<int:id>", methods=["DELETE"])
-def delete_transaction(id: int):
-    try:
-        transaction_service.delete(id)
-        return jsonify({"message": f"transaction {id} deleted successfully"}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 400
+    response_schema = EscrowResponseSchema()
+    return jsonify(response_schema.dump(escrow)), 200

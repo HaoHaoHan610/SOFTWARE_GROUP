@@ -9,8 +9,7 @@ class User:
         email: Optional[str]=None,
         password: Optional[str]=None,
         created_at: Optional[date]=None,
-        role: Optional[str]=None,
-        address:Optional[str]=None
+        role: Optional[str]=None
     ):
         self.id = id
         self.username = username
@@ -18,4 +17,4 @@ class User:
         self.password = password
         self.created_at = created_at
         self.role = role
-        self.address = address
+        # self.address = address

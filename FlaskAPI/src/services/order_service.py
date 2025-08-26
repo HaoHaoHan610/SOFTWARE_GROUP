@@ -31,19 +31,10 @@ class OrderService:
                customer_id:Optional[int]=None,
                quantity:Optional[int]= None,
                status:Optional[str]=None,
+               address:Optional[str]=None
                )->Optional[OrderModel]:
         
-        order = self.repository.get_by_id(id=id)
-        
-        if not order:
-            return None
-        
-        if customer_id is not None:
-            order.customer_id = customer_id
-        if quantity is not None:
-            order.quantity=quantity
-        if status is not None:
-            order.status=status
+        order = Order(id,address=address,customer_id=customer_id,status=status,quantity=quantity)
 
 
         return self.repository.update(order=order)

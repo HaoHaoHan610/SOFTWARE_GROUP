@@ -53,19 +53,21 @@ def update_status(id):
         return jsonify({"error": "Order not found"}), 404
     return response_schema.dump(order), 200
 
-# @bp.route("/order/<int:id>/status/<status>", methods=["PUT"])
-# def update_detail(id: int,status:str):
-#     data = request.get_json()
-#     errors = request_schema.validate(data, partial=True)
-#     if errors:
-#         return jsonify(errors), 400
-#     detail = order_service.update(
-#         id = id,
-#         status=status
-#     )
-#     if not detail:
-#         return jsonify({"error": "Detail not found"}), 404
-#     return jsonify(response_schema.dump(detail)), 200
+@bp.route("/", methods=["PUT"])
+def update_detail(id: int):
+    data = request.get_json()
+    errors = request_schema.validate(data, partial=True)
+    if errors:
+        return jsonify(errors), 400
+    detail = order_service.update(
+        id = id,
+        customer_id=data.get("customer_id"),
+        status=data.get("status"),
+        address=data.get("address")
+    )
+    if not detail:
+        return jsonify({"error": "Detail not found"}), 404
+    return jsonify(response_schema.dump(detail)), 200
 
 @bp.route("/<int:id>", methods=["DELETE"])
 def delete_order(id: int):

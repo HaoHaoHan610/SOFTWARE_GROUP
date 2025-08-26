@@ -12,5 +12,5 @@ class UserModel(BASE):
     password = Column(String(200), nullable=False)
     created_at = Column(DateTime, nullable=False)
     role = Column(String(50), nullable=False)
-    address = Column(String(255),nullable=False)
+    # address = Column(String(255),nullable=False)
     # orders = relationship("Order", back_populates="order")
