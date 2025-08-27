@@ -10,6 +10,7 @@ class WatchService:
     def create_watch(self, name: str, brand: str, price: float,
                      created_at: Optional[datetime] = None,
                      seller_id:Optional[int]=None,
+                     img:Optional[str]=None,
                     #  appraisal_report_id: Optional[int] = None,
                      existing_status: bool = True):
         if created_at is None:
@@ -21,6 +22,7 @@ class WatchService:
             brand=brand,
             price=price,
             created_at=created_at,
+            img = img,
             # appraisal_report_id=appraisal_report_id,
             existing_status=existing_status
         )
@@ -35,6 +37,7 @@ class WatchService:
         price: Optional[float] = None,
         existing_status: Optional[bool] = None,
         seller_id:Optional[int]=None,
+        img :Optional[str]=None,
         created_at: Optional[datetime] = None):#,
         #appraisal_report_id: Optional[int] = None):
     
@@ -44,6 +47,7 @@ class WatchService:
             name=name,
             brand=brand,
             price=price,
+            img=img,
             created_at=created_at,
             # appraisal_report_id=appraisal_report_id,
             existing_status=existing_status

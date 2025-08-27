@@ -6,6 +6,7 @@ class WatchSchemaRequest(Schema):
     price = fields.Float(required= True)
     created_at = fields.DateTime(required=False)
     # appraisal_report_id = fields.Int(required=False)
+    img = fields.Str(required=True)
     existing_status = fields.Boolean(required=False)
     seller_id = fields.Int(required=True)
 
@@ -16,6 +17,7 @@ class WatchSchemaResponse(Schema):
     brand = fields.Str(required=True)
     price = fields.Float(required= True)
     created_at = fields.Raw(required=True)
+    img = fields.Str(required=True)
     existing_status = fields.Boolean(required=True)
     # appraisal_report_id = fields.Int(required=False, allow_none=True)
 

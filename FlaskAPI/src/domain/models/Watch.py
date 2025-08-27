@@ -9,7 +9,8 @@ class Watch:
         price: float,
         created_at: datetime,
         seller_id:int,
-        existing_status: bool = True
+        existing_status: bool = True,
+        img: str="Unknow"
         # appraisal_report_id: int = None
     ):
         self.id = id
@@ -19,4 +20,5 @@ class Watch:
         self.created_at = created_at
         self.seller_id = seller_id
         self.existing_status = existing_status
+        self.img = img
         # self.appraisal_report_id = appraisal_report_id

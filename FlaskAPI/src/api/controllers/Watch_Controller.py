@@ -40,6 +40,7 @@ def add_watch():
         brand=data.get("brand"),
         price=data.get("price"),
         seller_id=data.get("seller_id"),
+        img = data.get("img"),
         # appraisal_report_id=data.get("appraisal_report_id"),
         existing_status=data.get("existing_status", True) 
     )
@@ -56,6 +57,7 @@ def update_watch(id: int):
         name=data.get("name"),
         brand=data.get("brand"),
         price=data.get("price"),
+        img = data.get("img"),
         # appraisal_report_id=data.get("appraisal_report_id", None),
         existing_status=data.get("existing_status", True)
     )

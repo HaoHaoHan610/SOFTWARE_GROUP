@@ -15,5 +15,6 @@ class WatchModel(BASE):
     # appraisal_report_id = Column(Integer,None)
     existing_status = Column(Boolean,default=True,nullable=False)
     seller_id = Column(Integer,ForeignKey("User.id"),nullable=False)
+    img = Column(String(255),nullable= False,default = "Unknown")
 
     order_details = relationship("OrderDetailModel", back_populates="watch")
