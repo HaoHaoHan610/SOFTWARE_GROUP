@@ -20,7 +20,7 @@ class TransactionResponseSchema(Schema):
 # Escrow
 class EscrowRequestSchema(Schema):
     transaction_id = fields.Int(required=True)
-    amount = fields.Float(required=True)
+    amount = fields.Float(required=False)
 
 class EscrowResponseSchema(Schema):
     id = fields.Int(required=True)

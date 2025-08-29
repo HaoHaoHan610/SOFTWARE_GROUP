@@ -40,6 +40,10 @@ def add_detail():
         order_id=data.get("order_id"),
         watch_id=data.get("watch_id"),
     )
+
+    if not new_detail:
+        return jsonify({"error": "Order or Watch not found"}), 404
+
     return response_schema.dump(new_detail), 201
 
 @bp.route("/<int:id>", methods=["PUT"])

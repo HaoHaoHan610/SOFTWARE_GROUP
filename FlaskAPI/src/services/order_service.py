@@ -11,12 +11,18 @@ class OrderService:
 
     def create_order(
         self,
-        customer_id:int
+        customer_id:int,
+        address:str,
+        amount:float = 0
     ) -> OrderModel:
         """Tạo Order mới"""
+
+        
         order = Order(
             id = None,
-            customer_id=customer_id
+            customer_id=customer_id,
+            amount= amount,
+            address=address
         )
         return self.repository.add(order=order)
     
@@ -31,10 +37,11 @@ class OrderService:
                customer_id:Optional[int]=None,
                quantity:Optional[int]= None,
                status:Optional[str]=None,
-               address:Optional[str]=None
+               address:Optional[str]=None,
+               amount:Optional[float]=None
                )->Optional[OrderModel]:
         
-        order = Order(id,address=address,customer_id=customer_id,status=status,quantity=quantity)
+        order = Order(id,address=address,customer_id=customer_id,status=status,quantity=quantity,amount=amount)
 
 
         return self.repository.update(order=order)
@@ -45,9 +52,7 @@ class OrderService:
         if order:
             return self.repository.delete(order)
         return False
-    
 
-    
     def get_customer(self,customer_id:int)->list[OrderModel]:
         return self.repository.get_customer(customer_id)
     

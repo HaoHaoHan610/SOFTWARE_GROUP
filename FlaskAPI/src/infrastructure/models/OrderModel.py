@@ -14,5 +14,6 @@ class OrderModel(BASE):
     updated_at = Column(DateTime,nullable=False)
     quantity = Column(Integer,default=0,nullable=False)
     address = Column(String(255),nullable=False)
+    amount = Column(DECIMAL(18,2),default=0.0,nullable=False)
 
     details = relationship("OrderDetailModel", back_populates="order")

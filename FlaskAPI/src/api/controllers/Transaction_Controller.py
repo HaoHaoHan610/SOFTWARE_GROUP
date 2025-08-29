@@ -13,7 +13,6 @@ transaction_service = TransactionService(TransactionRepository())
 escrow_service = EscrowService(EscrowRepository())
 
 
-# -------------------- Transaction --------------------
 @bp.route("/create", methods=["POST"])
 def create_transaction():
     data = request.get_json()
@@ -23,11 +22,12 @@ def create_transaction():
         return jsonify(errors), 400
 
     transaction = transaction_service.create_transaction(
-        buyer_id=data["buyer_id"],
-        seller_id=data["seller_id"],
-        order_id=data["order_id"],
-        amount=data["amount"]
+        buyer_id=data.get("buyer_id"),
+        order_id=data.get("order_id")
     )
+
+    if not transaction:
+        return jsonify({"error": "Order not found"}), 404
 
     response_schema = TransactionResponseSchema()
     return jsonify(response_schema.dump(transaction)), 201
@@ -40,7 +40,7 @@ def get_transaction(transaction_id):
         return jsonify({"error": "Transaction not found"}), 404
 
     response_schema = TransactionResponseSchema()
-    return jsonify(response_schema.dump(transaction)), 200
+    return jsonify(response_schema.dump(transaction)), 200 # Use to confirm corrected form of json body
 
 
 @bp.route("/all", methods=["GET"])
@@ -67,6 +67,20 @@ def create_escrow():
     response_schema = EscrowResponseSchema()
     return jsonify(response_schema.dump(escrow)), 201
 
+@bp.route("/escrow/transaction/create", methods=["POST"])
+def create_escrowTransaction():
+    data = request.get_json()
+    schema = EscrowRequestSchema()
+    errors = schema.validate(data)
+    if errors:
+        return jsonify(errors), 400
+
+    escrow = escrow_service.create_TransactionEscrow(
+        transaction_id=data.get("transaction_id")
+    )
+
+    response_schema = EscrowResponseSchema()
+    return jsonify(response_schema.dump(escrow)), 201
 
 @bp.route("/escrow/release/<int:escrow_id>", methods=["PUT"])
 def release_escrow(escrow_id):

@@ -14,6 +14,10 @@ class OrderDetailModel(BASE):
 
     watch = relationship("WatchModel", back_populates="order_details")
     order = relationship("OrderModel", back_populates="details")
+
+    # @property
+    # def price(self):
+    #     return self.watch.price if self.watch else 0.0
     
     # price = Column(Float nullable=False)
     # quantity = Column(Integer, default=1)

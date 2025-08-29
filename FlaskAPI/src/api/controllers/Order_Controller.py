@@ -37,7 +37,9 @@ def add_order():
     if errors:
         return jsonify(errors), 400
     new_order = order_service.create_order(
-        customer_id=data.get("customer_id")
+        customer_id=data.get("customer_id"),
+        address = data.get("address"),
+        amount = data.get("amount")
     )
     return response_schema.dump(new_order), 201
 

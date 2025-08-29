@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from infrastructure.databases.mssql import session
 from infrastructure.models.Order_DetailModel import OrderDetailModel
 from infrastructure.models.OrderModel import OrderModel
+from infrastructure.models.WatchModel import WatchModel
 from domain.models.Order import Order
 from typing import List, Optional
 from datetime import datetime
@@ -20,7 +21,8 @@ class OrderRepository:
                 created_at = datetime.utcnow(),
                 updated_at = datetime.utcnow(),
                 address = order.address,
-                quantity = order.quantity
+                quantity = order.quantity,
+                amount = order.amount
             )
             self.session.add(orderobj)
             self.session.commit()
@@ -29,8 +31,8 @@ class OrderRepository:
         finally:
             self.session.close()
 
-    def get_by_id(self, id: int)->Optional[OrderModel]:
-        return self.session.query(OrderModel).filter_by(id=id).first()
+    def get_by_id(self, id: int) -> Optional[OrderModel]:
+        return self.session.query(OrderModel).filter_by(id = id).first()
 
     def get_all(self)->list[OrderModel]:
         return self.session.query(OrderModel).all()
@@ -55,6 +57,8 @@ class OrderRepository:
                 order_obj.status = order.status  # thêm dòng này
             if order.address is not None:
                 order_obj.address = order.address
+            if order.amount is not None:
+                order_obj.amount = order.amount
 
             order_obj.updated_at = datetime.utcnow()
             
@@ -103,7 +107,6 @@ class OrderRepository:
             if not order_obj:
                 return None
 
-            # Quy tắc chuyển trạng thái
             valid_transitions = {
                 "Pending": ["Shipping", "Cancelled"],
                 "Shipping": ["Completed", "Cancelled"],
@@ -119,11 +122,9 @@ class OrderRepository:
                     f"Không thể đổi trạng thái từ '{current_status}' sang '{new_status}'"
                 )
 
-            # Cập nhật trạng thái đơn hàng
             order_obj.status = new_status
             order_obj.updated_at = datetime.utcnow()
 
-            # Nếu Shipping hoặc Completed → đồng hồ ko còn tồn tại để bán
             if new_status in ["Shipping", "Completed"]:
                 for d in order_obj.details:
                     if d.watch and d.watch.existing_status:
@@ -139,4 +140,3 @@ class OrderRepository:
             raise
         finally:
             self.session.close()
-

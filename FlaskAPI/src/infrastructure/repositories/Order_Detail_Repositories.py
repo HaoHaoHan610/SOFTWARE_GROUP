@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from infrastructure.databases.mssql import session
 from infrastructure.models.Order_DetailModel import OrderDetailModel
 from infrastructure.models.OrderModel import OrderModel
+from infrastructure.models.WatchModel import WatchModel
 from domain.models.Order_Detail import OrderDetail
 from sqlalchemy import func
 from typing import List, Optional
@@ -14,6 +15,11 @@ class OrderDetail_Repository:
 
     def add(self, order_detail: OrderDetail) -> Optional[OrderDetailModel]:
         try:
+            watch = self.session.query(WatchModel).filter_by(id=order_detail.watch_id).first()
+            order = self.session.query(OrderModel).filter_by(id=order_detail.order_id).first()
+            if not watch or not order:
+                return None
+
             existing = self.get_by_order_watch(order_detail.order_id, order_detail.watch_id)
             if existing:
                 existing.quantity = (existing.quantity or 1) + order_detail.quantity
@@ -48,6 +54,10 @@ class OrderDetail_Repository:
     
     def get_by_order_watch(self,order_id:int,watch_id:int)->Optional[OrderDetailModel]:
         return self.session.query(OrderDetailModel).filter_by(order_id=order_id,watch_id=watch_id).first()
+    
+    def get_watch(self,order_id):
+        watches = self.session.query(WatchModel).join(OrderDetailModel,WatchModel.id == OrderDetailModel.watch_id).filter(OrderDetailModel.order_id==order_id).all()
+        return watches
 
     def update(self,order_detail:OrderDetail)->Optional[OrderDetailModel]:
         try:
@@ -117,8 +127,7 @@ class OrderDetail_Repository:
                 order_id = detail_obj.order_id
                 self.session.delete(detail_obj)
                 self.session.commit()
-
-                # cập nhật lại tổng số lượng
+                
                 self._update_order_total(order_id)
                 return True
             return False
@@ -130,14 +139,25 @@ class OrderDetail_Repository:
 
 
     def _update_order_total(self, order_id: int):
-        """Cập nhật lại tổng số lượng của Order"""
-        total = (
+        """Cập nhật lại tổng số lượng và tổng tiền của Order"""
+        order = self.session.query(OrderModel).filter_by(id=order_id).first()
+        if not order:
+            return
+
+        total_quantity = (
             self.session.query(func.coalesce(func.sum(OrderDetailModel.quantity), 0))
             .filter_by(order_id=order_id)
             .scalar()
         )
-        order = self.session.query(OrderModel).filter_by(id=order_id).first()
-        if order:
-            order.quantity = total  # hoặc order.total_quantity nếu bạn dùng tên này
-            self.session.merge(order)
-            self.session.commit()
+
+        total_amount = (
+            self.session.query(func.coalesce(func.sum(OrderDetailModel.quantity * WatchModel.price), 0.0))
+            .join(WatchModel, WatchModel.id == OrderDetailModel.watch_id)
+            .filter(OrderDetailModel.order_id == order_id)
+            .scalar()
+        )
+
+        order.quantity = total_quantity
+        order.amount = total_amount
+        self.session.commit()
+
