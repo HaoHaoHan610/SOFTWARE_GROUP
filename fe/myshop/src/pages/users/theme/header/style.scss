@@ -1,0 +1,444 @@
+@use "sass:map";
+@import "style/pages/theme";
+
+.header_top {
+    background: map-get($theme-colors, "main1");
+    padding: 10px 0;
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .header_top_left {
+        ul {
+            display: flex;
+            list-style: none;
+            align-items: center;
+            padding: 0;
+            column-gap: 20px;
+
+            li {
+                font-size: 14px;
+                color: map-get($theme-colors, "text");
+                display: flex;
+                align-items: center;
+                column-gap: 5px;
+
+                svg {
+                    font-size: 16px;
+                }
+            }
+
+            li:first-child::after {
+                content: "";
+                height: 16px;
+                width: 1px;
+                background: map-get($theme-colors, "text");
+                opacity: 0.3;
+                margin-left: 10px;
+            }
+        }
+    }
+
+    .header_top_right {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        ul {
+            display: flex;
+            list-style: none;
+            column-gap: 4px;
+
+            a {
+                font-size: 16px;
+                color: map-get($theme-colors, "text");
+                transition: color 0.3s ease;
+
+                &:hover,
+                &:focus {
+                    color: map-get($theme-colors, "product");
+                }
+            }
+
+            li:last-child {
+                margin-left: 20px;
+
+                span {
+                    font-size: 14px;
+                    cursor: pointer;
+                    color: map-get($theme-colors, "text");
+                    transition: color 0.3s ease;
+
+                    &:hover,
+                    &:focus {
+                        color: map-get($theme-colors, "product");
+                    }
+                }
+            }
+        }
+    }
+}
+
+.header_logo {
+    padding: 20px 0;
+    text-align: center;
+
+    h1 {
+        font-size: 28px;
+        color: map-get($theme-colors, "main");
+        margin: 0;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+}
+
+.header_menu {
+    padding: 20px 0;
+
+    ul {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        align-items: center;
+
+        li {
+            position: relative;
+            margin: 0 25px;
+
+            a {
+                text-decoration: none;
+                font-size: 16px;
+                color: map-get($theme-colors, "text1");
+                text-transform: uppercase;
+                font-weight: 600;
+                padding: 8px 12px;
+                transition: color 0.3s ease;
+
+                &:hover,
+                &:focus {
+                    color: map-get($theme-colors, "main");
+                }
+            }
+
+            &.active a {
+                color: map-get($theme-colors, "main");
+                font-weight: 700;
+            }
+
+            &:hover .header_menu_dropdown {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+            .header_menu_dropdown {
+                background: #ffffff;
+                border: 1px solid map-get($theme-colors, "main1");
+                position: absolute;
+                width: 200px;
+                z-index: 10;
+                padding: 10px 0;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(10px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                transition: all 0.3s ease;
+
+                li {
+                    margin: 0;
+
+                    a {
+                        text-transform: capitalize;
+                        color: map-get($theme-colors, "text");
+                        font-weight: 500;
+                        padding: 10px 20px;
+                        display: block;
+
+                        &:hover,
+                        &:focus {
+                            color: map-get($theme-colors, "product");
+                            background: map-get($theme-colors, "main1");
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.header_cart {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 20px 0;
+
+    .header_cart_price {
+        margin-right: 20px;
+
+        span {
+            font-size: 16px;
+            font-weight: 600;
+            color: map-get($theme-colors, "text");
+        }
+    }
+
+    ul {
+        display: flex;
+        list-style: none;
+        margin: 0;
+
+        li {
+            position: relative;
+
+            a {
+                color: map-get($theme-colors, "text");
+                font-size: 24px;
+                transition: color 0.3s ease;
+
+                &:hover,
+                &:focus {
+                    color: map-get($theme-colors, "product");
+                }
+
+                span {
+                    position: absolute;
+                    top: -8px;
+                    right: -8px;
+                    background: map-get($theme-colors, "main");
+                    color: #fff;
+                    width: 18px;
+                    height: 18px;
+                    border-radius: 50%;
+                    text-align: center;
+                    line-height: 18px;
+                    font-size: 12px;
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+}
+
+.watch_trend_provip {
+    position: relative;
+
+    .watch_trend_pro {
+        background: map-get($theme-colors, "main");
+        color: #fff;
+        padding: 12px 15px;
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s ease;
+
+        &:hover,
+        &:focus {
+            background: darken(map-get($theme-colors, "main"), 10%);
+        }
+
+        svg {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+    }
+
+    ul {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 250px;
+        background: #fff;
+        border: 1px solid map-get($theme-colors, "main1");
+        list-style: none;
+        padding: 10px 0;
+        margin: 0;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+        z-index: 9;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+        &.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        li {
+            padding: 10px 15px;
+
+            a {
+                text-decoration: none;
+                color: map-get($theme-colors, "text");
+                font-size: 14px;
+
+                &:hover,
+                &:focus {
+                    color: map-get($theme-colors, "product");
+                    background: map-get($theme-colors, "main1");
+                }
+            }
+        }
+    }
+}
+
+.watch_hero_container {
+    padding: 20px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .watch_hero {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 20px;
+
+        .watch_form {
+            flex: 1;
+            max-width: 500px;
+            margin-right: 20px;
+
+            form {
+                display: flex;
+                border: 1px solid map-get($theme-colors, "main1");
+                border-radius: 4px;
+                overflow: hidden;
+
+                input {
+                    flex: 1;
+                    border: none;
+                    height: 40px;
+                    font-size: 14px;
+                    color: map-get($theme-colors, "text");
+                    padding: 0 15px;
+                    outline: none;
+
+                    &::placeholder {
+                        color: map-get($theme-colors, "text1");
+                        opacity: 0.6;
+                    }
+                }
+
+                button {
+                    background: map-get($theme-colors, "main");
+                    color: #fff;
+                    border: none;
+                    padding: 0 20px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: background 0.3s ease;
+
+                    &:hover,
+                    &:focus {
+                        background: darken(map-get($theme-colors, "main"), 10%);
+                    }
+                }
+            }
+        }
+
+        .watch_phone {
+            display: flex;
+            align-items: center;
+            column-gap: 10px;
+
+            .watch_phone-icon {
+                svg {
+                    font-size: 24px;
+                    color: map-get($theme-colors, "main");
+                }
+            }
+
+            .watch_phone_text {
+                p {
+                    margin: 0;
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: map-get($theme-colors, "text");
+                }
+
+                span {
+                    font-size: 12px;
+                    color: map-get($theme-colors, "text1");
+                }
+            }
+        }
+    }
+
+    .hero_item {
+        position: relative;
+        width: 100%; // Reset to natural width of the container
+        height: 410px;
+        background: url('https://www.replicait.it/wp-content/uploads/2021/04/Repliche-Rolex1.png') no-repeat center center; // Actual image URL
+        background-size: cover; // Fill the container evenly, cropping if necessary
+        display: flex;
+        align-items: center;
+        justify-content: flex-start; // Keep text aligned to the left as per your design
+        padding-left: 50px; // Maintain some left padding for text spacing
+
+        &:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.3); // Overlay for readability
+        }
+
+        .hero_text {
+            position: relative;
+            z-index: 1;
+            color: map-get($theme-colors, "main2");
+            max-width: 400px;
+
+            span {
+                font-size: 16px;
+                color: #fff;
+                font-weight: 600;
+                display: block;
+                margin-bottom: 10px;
+            }
+
+            h1 {
+                font-size: 36px;
+                color: #fff;
+                font-weight: 700;
+                margin: 0 0 10px;
+                line-height: 1.2;
+            }
+
+            p {
+                font-size: 16px;
+                color: #fff;
+                margin: 0 0 20px;
+            }
+
+            .primary-btn {
+                display: inline-block;
+                background: map-get($theme-colors, "main");
+                color: #fff;
+                padding: 12px 30px;
+                text-decoration: none;
+                font-size: 16px;
+                font-weight: 600;
+                border-radius: 4px;
+                transition: background 0.3s ease;
+
+                &:hover,
+                &:focus {
+                    background: map-get($theme-colors, "main");
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,118 @@
+@use "sass:map";
+@import "style/pages/theme";
+
+.footer {
+    .footer_about {
+        margin-bottom: 30px;
+
+        .footer_about_logo {
+            margin-bottom: 30px;
+            display: inline-block;
+        }
+    }
+
+    .footer_about ul li {
+        font-size: 16px;
+        color: map-get($theme-colors , "text");
+        line-height: 36px;
+        list-style: none;
+    }
+
+    .footer_widget {
+        margin-bottom: 30px;
+        overflow: hidden;
+
+        h6 {
+            color: map-get($theme-colors, "text");
+            margin-bottom: 10px;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        ul {
+            float: left;
+            width: 50%;
+
+            li {
+                list-style: none;
+
+                a {
+                    color: map-get($theme-colors, "text");
+                    font-size: 14px;
+                    line-height: 32px;
+                    text-decoration: none;
+                }
+            }
+        }
+
+        p {
+            font-size: 14px;
+            color: map-get($theme-colors, "text");
+            margin-bottom: 30px;
+        }
+
+        form {
+            margin-bottom: 30px;
+
+            .input_gr {
+                display: flex;
+                align-items: center;
+                width: 100%;
+                max-width: 300px;
+
+                input {
+                    flex: 1;
+                    font-size: 16px;
+                    padding: 0 15px;
+                    color: map-get($theme-colors, "text");
+                    height: 46px;
+                    border: 1px solid #ededed;
+                    border-radius: 4px 0 0 4px;
+
+                    &::placeholder {
+                        color: map-get($theme-colors, "text");
+                    }
+                }
+
+                button {
+                    height: 46px;
+                    padding: 0 20px;
+                    border-radius: 0 4px 4px 0;
+                    background: map-get($theme-colors, "main");
+                    color: #fff;
+                    font-weight: bold;
+                    cursor: pointer;
+                    min-width: max-content;
+                }
+            }
+        }
+
+    }
+
+    .footer_widget_social {
+        display: flex;
+        align-items: center;
+        column-gap: 10px;
+        margin-top: 20px;
+
+        div {
+            :hover {
+                background: map-get($theme-colors, "main");
+                color: #fff;
+                border-color: #fff;
+            }
+
+
+            svg {
+                font-size: 20px;
+                padding: 10px;
+                color: #404040;
+                border: 1px solid #ededed;
+                border-radius: 50%;
+                transition: all, 0.3s;
+                background: #ededed;
+                cursor: pointer;
+            }
+        }
+    }
+}
