@@ -13,27 +13,23 @@ const FeaturedItem = ({ item }) => {
     const [active, setActive] = useState(false);
 
     return (
-        <div className="col-lg-3">
-            <div className={`featured_item ${active ? "active" : ""}`}>
-                <div
-                    className="featured_item_pic"
-                    style={{ backgroundImage: `url(${item.img})` }}
-                    onClick={() => setActive(!active)}
-                ></div>
+        <div className={`featured_item ${active ? "active" : ""}`}>
+            <div className="featured_item_pic" onClick={() => setActive(!active)}>
+                <img src={item.img} alt={item.name} />
+            </div>
 
-                <div className="featured_item_text">
-                    <h6>
-                        <Link to="">{item.name}</Link>
-                    </h6>
-                    <h5>{formatter(item.price)}</h5>
+            <div className="featured_item_text">
+                <h6>
+                    <Link to="">{item.name}</Link>
+                </h6>
+                <h5>{formatter(item.price)}</h5>
 
-                    {active && (
-                        <ul className="featured_item_pic_hover">
-                            <li><AiOutlineEye /></li>
-                            <li><AiOutlineShoppingCart /></li>
-                        </ul>
-                    )}
-                </div>
+                {active && (
+                    <ul className="featured_item_pic_hover">
+                        <li><AiOutlineEye /></li>
+                        <li><AiOutlineShoppingCart /></li>
+                    </ul>
+                )}
             </div>
         </div>
     );
@@ -92,25 +88,95 @@ const HomePage = () => {
         all: {
             title: "All",
             products: [
-                {
-                    name: "Rolex Datejust 31 278240 Silver Dial",
-                    img: "https://empireluxury.vn/wp-content/uploads/2024/08/dong-ho-rolex-datejust-31-278240-mat-so-trang-9.jpg",
-                    price: 192000000
-                },
+                // Rolex
+                { name: "Rolex Datejust 31", img: "https://empireluxury.vn/wp-content/uploads/2024/08/dong-ho-rolex-datejust-31-278240-mat-so-trang-9.jpg", price: 192000000 },
+                { name: " Rolex 36mm M126233-0016", img: "https://www.watchstore.vn/wp-content/uploads/2023/05/m126233-0016-1712663261-1024x1024.jpg", price: 297500000 },
+
+                // Casio
+                { name: "CASIO EDIFICE 41mm EFB-710SG-2AVUDF", img: "https://www.watchstore.vn/wp-content/uploads/2025/08/CA4640-09A-27.png", price: 6440000 },
+                { name: "CASIO EDIFICE 41mm EFB-710SG-1AVUDF", img: "https://www.watchstore.vn/wp-content/uploads/2025/08/CA4640-09A-26.png", price: 7579000 },
+                { name: "CASIO EDIFICE 43mm ECB-S10NIS-7ADR", img: "https://www.watchstore.vn/wp-content/uploads/2025/08/CA4640-09A-25.png", price: 10850000 },
+
+                // Orient
+                { name: "Orient 43mm Nam RE-AT0107S30B", img: "https://www.watchstore.vn/wp-content/uploads/2025/08/EO1184-81D-4-2.png", price: 19125000 },
+                { name: "Orient 40.5mm RA-AC0019L30B", img: "https://www.watchstore.vn/wp-content/uploads/2025/08/EO1184-81D-1-2.png", price: 4930000 },
+                { name: "Orient 40.5mm RA-AC0020G30B", img: "https://www.watchstore.vn/wp-content/uploads/2025/08/EO1184-81D-2-2.png", price: 7100000 },
+
+                // Seiko
+                { name: "Seiko 39mm SSB481P1", img: "https://www.watchstore.vn/wp-content/uploads/2025/08/Du-an-moi-6-4.png", price: 10800000 },
+                { name: "Seiko 40mm SSB459P1", img: "https://www.watchstore.vn/wp-content/uploads/2025/08/Du-an-moi-2-4.png", price: 10800000 },
+                { name: "Seiko 41.7mm SRPL53K1", img: "https://www.watchstore.vn/wp-content/uploads/2025/08/Du-an-moi-1-6.png", price: 16920000 },
+
+                // Nữ
+                { name: "SR-SL6657.4202", img: "https://www.dangquangwatch.vn/upload/product/dong_ho_nu_nhat_sr_sl10721201tejpeg_1628431044-1957575113.jpeg", price: 2750000 },
+                { name: "Mido Belluna Royal", img: "https://donghoduyanh.com/images/products/2025/08/08/large/m0241102210300_1754643848.jpg.webp", price: 16335000 },
+                { name: " Citizen Eco-Drive EM0416-78A ", img: "https://donghoduyanh.com/images/products/2025/07/09/large/citizen-em0416-78a_1752054366.jpg.webp", price: 4790000 },
+
+                // Nhật
+                { name: " Carnival 41mm Nam 8131G-VH-TT", img: "https://www.watchstore.vn/wp-content/uploads/2025/06/Carnival-Nam-8131G-VH-TT.jpg", price: 4480000 },
+                { name: "Olym Pianus 42mm  OP990-45ADGS-GL-D", img: "https://www.watchstore.vn/wp-content/uploads/2022/05/op990-45adgs-gl-d-1-1655171724651-1712585288-1024x1024.jpg", price: 6670000 },
+
+                // Thụy Sĩ
+                { name: "Frederique Constant 23mm FC-200MC16", img: "https://www.watchstore.vn/wp-content/uploads/2021/06/fc-200mc16-0-1625740043875-1712571532.jpg", price: 20178000 },
+                { name: "Orient 40.8mm RA-AR0004S30B", img: "https://www.watchstore.vn/wp-content/uploads/2020/12/ra-ar0004s10b-1756195028-1760240517-1712565563-1024x1024.jpg", price: 8008008 },
             ],
         },
 
-        men: {
+        rolex: {
             title: "Rolex",
             products: [
-                {
-                    name: "Rolex aa25",
-                    img: "https://th.bing.com/th/id/ODL.2f90b2260c582d29547a83779510c0da?w=197&h=98&c=7&rs=1&qlt=80&o=6&cb=thws4&dpr=1.3&pid=RichNav",
-                    price: 30000,
-                },
+                { name: "Rolex 41mm M126334-0026", img: "https://www.watchstore.vn/wp-content/uploads/2023/05/m126334-0026-1712663408-1024x1024.jpg", price: 276250000 },
+                { name: "Rolex 36mm M126231-0043", img: "https://www.watchstore.vn/wp-content/uploads/2023/05/m126231-0043-1712663175-1024x1024.jpg", price: 280000000 },
+                { name: "Rolex 41mm M126331-0004", img: "https://www.watchstore.vn/wp-content/uploads/2023/05/m126331-0004-1-1115527411-1790351819-1712663176-1024x1024.jpg", price: 485000000 },
+                { name: "Rolex 40mm M126900-0001", img: "https://www.watchstore.vn/wp-content/uploads/2023/05/m126900-0001-1712663174-1024x1024.jpg", price: 160525000 },
+                { name: "Rolex 41mm M126334-0016", img: "https://www.watchstore.vn/wp-content/uploads/2023/05/m126334-0016-1712663407-1024x1024.jpg", price: 392000000 },
+            ],
+        },
+
+        casio: {
+            title: "Casio",
+            products: [
+                { name: "Casio G-Shock GD-350GB-1DR", img: "https://donghoduyanh.com/images/products/2023/09/14/large/gd-350gb-1dr_1694699218.jpg.webp", price: 3850000 },
+                { name: "Casio Edifice EFR-574D-2AVUDF", img: "https://donghoduyanh.com/images/products/2023/09/14/large/efr-574d-2avudf_1694707693.jpg.webp", price: 4228000 },
+                { name: "Casio Edifice EQS-950D-1AVUDF", img: "https://donghoduyanh.com/images/products/2024/06/06/large/eqs-950d-1avudf_1717648858.jpg.webp", price: 4993000 },
+                { name: "Casio Edifice EFV-610D-3CVUDF", img: "https://donghoduyanh.com/images/products/2023/03/13/large/efv-610d-3cvudf_1678693574.jpg.webp", price: 2888000 },
+            ],
+        },
+
+        orient: {
+            title: "Orient",
+            products: [
+                { name: "Orient Multi Year Calendar RA-BA0006B30B", img: "https://donghoduyanh.com/images/products/2025/04/30/large/ra-ba0006b30b_1745951006.jpg.webp", price: 6728000 },
+                { name: "Orient Mako Solar RA-WJ0002L10B", img: "https://donghoduyanh.com/images/products/2025/04/30/large/ra-wj0002l10b_1745950374.jpg.webp", price: 7368000 },
+                { name: "Orient RF-QD0009S10B", img: "https://donghoduyanh.com/images/products/2025/04/30/large/rf-qd0009s10b_1745949370.jpg.webp", price: 4258000 },
+                { name: "Orient Star Layered Skeleton Limited RE-AV0B11E00B", img: "https://donghoduyanh.com/images/products/2025/03/14/large/re-av0b11e00b_1741944739.jpg.webp", price: 28680000 },
+                { name: "Orient Limited Edition RA-AR0011S30B", img: "https://donghoduyanh.com/images/products/2025/04/18/large/dong-ho-deo-tay-orient-ra-ar0011s30b_1744956768.jpg.webp", price: 13000000 },
+            ],
+        },
+
+        seiko: {
+            title: "Seiko",
+            products: [
+                { name: "Seiko 5 Sports Vintage Car Special Edition SRPL47K1", img: "https://donghoduyanh.com/images/products/2025/08/22/large/seiko-srpl47k1_1755854222.jpg.webp", price: 9258000 },
+                { name: "Seiko 5 Sport SKX series SRPL85K1", img: "https://donghoduyanh.com/images/products/2025/06/18/large/srpl85k1_1750229413.jpg.webp", price: 12000000 },
+                { name: "Seiko Presage Classic Series SPB478J1", img: "https://donghoduyanh.com/images/products/2025/05/09/large/seiko_spb478j1_1746780931.jpg.webp", price: 27600000 },
+                { name: "Seiko Presage SSA464J1", img: "https://donghoduyanh.com/images/products/2025/02/24/large/ssa464j1_1740381704.jpg.webp", price: 17200000 },
+                { name: "Seiko 5 Sports SKX Series Limited Edition SSK046K1", img: "https://donghoduyanh.com/images/products/2025/02/24/large/ssk046k1_1740382614.jpg.webp", price: 14960000 },
+            ],
+        },
+
+        nu: {
+            title: "Women's watches",
+            products: [
+                { name: "Casio G-Shock GMA-S2100MD-7ADR", img: "https://donghoduyanh.com/images/products/2023/09/15/large/gma-s2100md-7adr_1694711421.jpg.webp", price: 3592000 },
+                { name: "Orient Blue Moon II Open Heart RA-AG0018L30B", img: "https://donghoduyanh.com/images/products/2025/06/19/large/ra-ag0018l30b_1750298349.jpg.webp", price: 7570000 },
+                { name: "Daniel Wellington 28mm DW00100220", img: "https://www.watchstore.vn/wp-content/uploads/2023/08/01_1727663151.jpg", price: 3770000 },
+                { name: "Bulova 36mm 96P197", img: "https://www.watchstore.vn/wp-content/uploads/2022/03/96p197-1-632230052-533769143-1712581137-1024x1024.jpg", price: 10200000 },
+                { name: "Tissot 35mm Nữ T050.207.37.017.04", img: "https://www.watchstore.vn/wp-content/uploads/2025/06/tissot-nu-t050-207-37-017-04.jpg", price: 14800000 },
             ],
         },
     };
+
 
     const renderFeaturedProducts = (data) => {
         const tabList = [];
@@ -120,9 +186,11 @@ const HomePage = () => {
             tabList.push(<Tab key={index}>{data[key].title}</Tab>);
             tabPanels.push(
                 <TabPanel key={index}>
-                    {data[key].products.map((item, j) => (
-                        <FeaturedItem key={j} item={item} />
-                    ))}
+                    <div className="tab-panel-grid">
+                        {data[key].products.map((item, j) => (
+                            <FeaturedItem key={j} item={item} />
+                        ))}
+                    </div>
                 </TabPanel>
             );
         });
@@ -134,6 +202,7 @@ const HomePage = () => {
             </Tabs>
         );
     };
+
 
     return (
         <>
