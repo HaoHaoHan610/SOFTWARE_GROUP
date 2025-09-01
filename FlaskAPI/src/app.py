@@ -30,6 +30,7 @@ def create_app():
     app.register_blueprint(bp_feedback)
     app.register_blueprint(bp_order)
     app.register_blueprint(bp_detail)
+    app.register_blueprint(bp_transaction)
 
     @app.route('/')
     def home():

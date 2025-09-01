@@ -46,10 +46,9 @@ class EscrowRepository:
     def __init__(self, session: Session = session):
         self.session = session
 
-    def create_escrow(self,buyer_id:int,seller_id:int, transaction_id: int, amount: float) -> EscrowModel:
+    def create_escrow(self,seller_id:int, transaction_id: int, amount: float) -> EscrowModel:
 
         escrow = EscrowModel(
-            buyer_id = buyer_id,
             seller_id = seller_id,
             transaction_id=transaction_id,
             amount=amount,
@@ -61,8 +60,32 @@ class EscrowRepository:
         self.session.refresh(escrow)
         return escrow
     
+    def get_by(self,id:int):
+        return self.session.query(EscrowModel).filter_by(id=id).first()
+    
+    def update_escrow(self,id:int,status:Optional[str]=None,seller_id:Optional[int]=None,transaction_id:Optional[int]=None,amount:Optional[float]=None)->Optional[EscrowModel]:
+        escrow = self.get_by(id=id)
+        
+        if not escrow:
+            return None 
+        
+        if seller_id is not None:
+            escrow.seller_id = seller_id
+        if transaction_id is not None:
+            escrow.transaction_id = transaction_id
+        if amount is not None:
+            escrow.amount = amount
+        if status is not None:
+            escrow.status = status
+
+        self.session.commit()
+        self.session.refresh(escrow)
+
+        return escrow
+
+
     def get_transaction(self,transaction_id:int):
-        return self.session.query(TransactionModel).filter_by(transaction = transaction_id).all()
+        return self.session.query(EscrowModel).filter_by(transaction_id = transaction_id).all()
 
     def release_escrow(self, escrow_id: int) -> Optional[EscrowModel]:
         escrow = self.session.query(EscrowModel).filter_by(id=escrow_id).first()
@@ -75,12 +98,13 @@ class EscrowRepository:
     
     def create_EscrowTransaction(self,transaction_id:int)->list[EscrowModel]:
         transaction = self.session.query(TransactionModel).filter_by(id = transaction_id).first()
-        details = self.session.query(OrderDetailModel).filter_by(order_id = transaction.order_by).all()
+        details = self.session.query(OrderDetailModel).filter_by(order_id = transaction.order_id).all()
         for detail in details:
-            watch = self.session.query(WatchModel).filter_by(watch_id = detail.watch_id).first()
+            watch = self.session.query(WatchModel).filter_by(id = detail.watch_id).first()
             self.create_escrow(seller_id=watch.seller_id,
-                               transaction_id=transaction,
-                               buyer_id = transaction.buyer_id
+                               transaction_id=transaction.id,
+                               amount=watch.price,
+
                                )
 
         return self.get_transaction(transaction_id=transaction.id)

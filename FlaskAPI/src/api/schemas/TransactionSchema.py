@@ -2,10 +2,10 @@ from marshmallow import Schema, fields
 
 # Transaction
 class TransactionRequestSchema(Schema):
-    buyer_id = fields.Int(required=True)
-    seller_id = fields.Int(required=True)
+    # buyer_id = fields.Int(required=True)
+    # seller_id = fields.Int(required=True)
     order_id = fields.Int(required=True)  
-    amount = fields.Float(required=False)
+    # amount = fields.Float(required=False)
 
 class TransactionResponseSchema(Schema):
     id = fields.Int(required=True)
