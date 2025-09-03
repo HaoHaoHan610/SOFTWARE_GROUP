@@ -69,15 +69,15 @@
             content: " ";
             margin: 0 auto;
         }
-
     }
 
     .react-tabs {
         ul {
             display: flex;
             justify-content: center;
-            margin-bottom: 50px;
-
+            margin-bottom: 30px;
+            flex-wrap: wrap; // cho tab xuống dòng khi nhiều
+            gap: 10px;
         }
 
         li {
@@ -88,61 +88,56 @@
             margin-right: 25px;
             position: relative;
             bottom: -10px;
+            cursor: pointer;
         }
     }
 
+    /* Lưới sản phẩm */
+    .tab-panel-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+    }
+
     .featured_item {
-        margin-bottom: 20px;
         text-align: center;
         position: relative;
-
-        .featured_item_pic {
-            width: 200px;
-            height: 200px;
-            background-size: cover;
-            background-position: center;
-            margin: 0 auto;
-        }
-
-        .featured_item_text {
-            margin-top: 10px;
-
-            .price {
-                font-size: 18px;
-                font-weight: bold;
-                color: #000;
-                margin-bottom: 5px;
-            }
-
-            .featured_item_pic_hover {
-                position: relative;
-                bottom: 0;
-                opacity: 0;
-                display: flex;
-                justify-content: center;
-                gap: 10px;
-                transition: all 0.3s ease-in-out;
-
-                i {
-                    font-size: 18px;
-                    background: #000;
-                    color: #fff;
-                    padding: 8px;
-                    border-radius: 50%;
-                    cursor: pointer;
-
-                    &:hover {
-                        background: #ff6600;
-                    }
-                }
-            }
-        }
+        background: #fff;
+        /* nền trắng cho mỗi ô */
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease-in-out;
 
         &:hover {
-            .featured_item_pic_hover {
-                opacity: 1;
-                transform: translateY(5px);
+            transform: translateY(-5px);
+            /* hover nổi lên */
+        }
+
+        .featured_item_pic {
+            width: 100%;
+            height: 300px;
+            /* to hơn */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            /* nền trắng */
+            border-radius: 12px;
+            overflow: hidden;
+
+            img {
+                max-height: 90%;
+                max-width: 90%;
+                object-fit: contain;
+                transition: transform 0.3s ease;
+            }
+
+            &:hover img {
+                transform: scale(1.1);
+                /* zoom nhẹ khi hover */
             }
         }
+
     }
 }

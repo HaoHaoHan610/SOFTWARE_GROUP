@@ -155,7 +155,7 @@ const Header = () => {
                                 </div>
                                 <div className="watch_phone_text">
                                     <p>0352.345.789</p>
-                                    <span>Support Mon-Sat</span>
+                                    <span>Support from Monday to Saturday</span>
                                 </div>
                             </div>
                         </div>
