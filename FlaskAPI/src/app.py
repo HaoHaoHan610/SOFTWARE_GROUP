@@ -16,7 +16,6 @@ from api.controllers.Order_Controller import bp as bp_order
 from api.controllers.Order_Detail_Controller import bp as bp_detail
 from api.controllers.Transaction_Controller import bp as bp_transaction
 from flask_restful import Api
-
 def create_app():
     app = Flask(__name__)
 
@@ -31,6 +30,7 @@ def create_app():
     app.register_blueprint(bp_feedback)
     app.register_blueprint(bp_order)
     app.register_blueprint(bp_detail)
+    app.register_blueprint(bp_transaction)
 
     @app.route('/')
     def home():

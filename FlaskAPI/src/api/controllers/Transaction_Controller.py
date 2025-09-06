@@ -22,7 +22,6 @@ def create_transaction():
         return jsonify(errors), 400
 
     transaction = transaction_service.create_transaction(
-        buyer_id=data.get("buyer_id"),
         order_id=data.get("order_id")
     )
 
@@ -61,13 +60,15 @@ def create_escrow():
 
     escrow = escrow_service.create_escrow(
         transaction_id=data["transaction_id"],
-        amount=data["amount"]
+        amount=data["amount"],
+        seller_id=data["seller_id"],
+        buyer_id=data["buyer_id"]
     )
 
     response_schema = EscrowResponseSchema()
     return jsonify(response_schema.dump(escrow)), 201
 
-@bp.route("/escrow/transaction/create", methods=["POST"])
+@bp.route("/escrow/transactions/create", methods=["POST"])
 def create_escrowTransaction():
     data = request.get_json()
     schema = EscrowRequestSchema()
@@ -79,7 +80,7 @@ def create_escrowTransaction():
         transaction_id=data.get("transaction_id")
     )
 
-    response_schema = EscrowResponseSchema()
+    response_schema = EscrowResponseSchema(many=True)
     return jsonify(response_schema.dump(escrow)), 201
 
 @bp.route("/escrow/release/<int:escrow_id>", methods=["PUT"])
@@ -89,4 +90,30 @@ def release_escrow(escrow_id):
         return jsonify({"error": "Escrow not found"}), 404
 
     response_schema = EscrowResponseSchema()
+    return jsonify(response_schema.dump(escrow)), 200
+
+
+@bp.route("/escrow/bytransaction/release/<int:transaction_id>", methods=["PUT"])
+def release_escrow_by_transaction(transaction_id):
+    escrow = escrow_service.release_AllTransactions(transaction_id=transaction_id)
+    if not escrow:
+        return jsonify({"error": "Escrow not found"}), 404
+
+    response_schema = EscrowResponseSchema(many=True)
+    return jsonify(response_schema.dump(escrow)), 200
+
+@bp.route("/escrow/status", methods=["PUT"])
+def update_escrow_status(): 
+    data = request.get_json()
+    schema = EscrowRequestSchema()
+    errors = schema.validate(data)
+    
+    escrow = escrow_service.update_transactions_status(
+        transaction_id=data.get("transaction_id"),
+        status= data.get("status")
+    )
+    if not errors:
+        return jsonify({"error": "Escrow or Transactions not found"}), 404
+
+    response_schema = EscrowResponseSchema(many=True)
     return jsonify(response_schema.dump(escrow)), 200

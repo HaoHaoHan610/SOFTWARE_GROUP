@@ -156,7 +156,7 @@ class OrderDetail_Repository:
             .filter(OrderDetailModel.order_id == order_id)
             .scalar()
         )
-
+        order.updated_at = datetime.utcnow()
         order.quantity = total_quantity
         order.amount = total_amount
         self.session.commit()
