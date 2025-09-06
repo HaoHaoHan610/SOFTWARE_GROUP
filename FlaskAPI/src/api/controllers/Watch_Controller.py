@@ -5,7 +5,7 @@ from infrastructure.repositories.Watch_Repositories import WatchRepository
 from infrastructure.databases.mssql import session
 from api.schemas.WatchSchema import WatchSchemaRequest, WatchSchemaResponse
 
-bp = Blueprint('watch', __name__, url_prefix="/watchs")
+bp = Blueprint('watch', __name__, url_prefix="/watches")
 
 Watch_service = WatchService(WatchRepository(session))
 request_schema = WatchSchemaRequest()
