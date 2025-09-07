@@ -15,6 +15,7 @@ class WatchRepository:
         watchobj.price = watch.price
         watchobj.existing_status=watch.existing_status
         watchobj.seller_id = watch.seller_id
+        watchobj.img = watch.img
         # watchobj.appraisal_report_id = watch.appraisal_report_id
         watchobj.created_at = watch.created_at
         try:
@@ -48,6 +49,8 @@ class WatchRepository:
                 watchobj.price = watch.price
             if watch.created_at is not None:
                 watchobj.created_at = watch.created_at
+            if watch.img is not None:
+                watchobj.img = watch.img
             if watch.existing_status is not None:
                 watchobj.existing_status = watch.existing_status
             # if watch.appraisal_report_id is not None:
