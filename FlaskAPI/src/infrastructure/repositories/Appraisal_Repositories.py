@@ -20,7 +20,7 @@ class AppraisalRepository:
                 con_note=appraisal.con_note,
                 status=appraisal.status,
                 es_value=appraisal.es_value,
-                # created_at=datetime.utcnow(),
+                created_at=datetime.utcnow(),
                 updated_at=datetime.utcnow()
             )
             self.session.add(appraisalobj)

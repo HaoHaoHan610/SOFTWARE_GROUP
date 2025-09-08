@@ -68,5 +68,16 @@ def delete_feedback(id: int):
 
 @bp.route("/agent", methods=["GET"])
 def get_feedback_agent():
+    """Return all feedback items where receiver is role 'agent'.
+    Optional query params:
+      - receiver_id: filter by a specific agent id
+    """
+    receiver_id = request.args.get('receiver_id', type=int)
+    if receiver_id:
+        # direct filter to one agent
+        records = feedback_service.repository.get_by_receiver_id(receiver_id)
+        return response_schema.dump(records, many=True), 200
     feedback = feedback_service.get_feedback_agent()
     return response_schema.dump(feedback, many=True), 200
+
+
