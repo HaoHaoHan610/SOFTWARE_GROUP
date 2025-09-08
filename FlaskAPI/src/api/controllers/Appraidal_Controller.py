@@ -20,6 +20,13 @@ def get_all():
     appraisals = appraisal_service.get_all_appraisals()
     return jsonify(response_schema.dump(appraisals, many=True)), 200
 
+@bp.route('/appraisals/watch/<int:watch_id>', methods=['GET'])
+def get_appraisal_by_watch_id(watch_id):
+    appraisal = AppraisalService.get_by_watch_id(watch_id)
+    if appraisal:
+        return jsonify(response_schema.dump(appraisal)), 200
+    return jsonify({'message': 'No appraisal found'}), 404
+
 # ----------------------
 # CREATE appraisal
 # ----------------------
