@@ -234,8 +234,15 @@ const AppraisalForm = ({ onAppraisalCreated, appraiserId, watches, selectedWatch
       }
 
       // Map frontend fields to backend schema
+      const normalizedAppraiserId = Number(appraiserId ?? 0);
+      if (!Number.isFinite(normalizedAppraiserId) || normalizedAppraiserId <= 0) {
+        toast.error('Invalid appraiser id. Please re-login.');
+        setLoading(false);
+        return;
+      }
+
       const appraisalData = {
-        appraiser_id: appraiserId,
+        appraiser_id: normalizedAppraiserId,
         watch_id: parseInt(formData.watch_id),
         es_value: parseFloat(formData.estimated_value),
         auth: !!formData.authenticity_verified,

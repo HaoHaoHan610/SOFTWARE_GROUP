@@ -96,15 +96,26 @@ const WatchDetails = () => {
 
       try {
         const watchId = Number(id);
+        // Helper: retry fetch N times for flaky endpoints
+        const withRetry = async (fn, attempts = 2) => {
+          let lastErr;
+          for (let i = 0; i < attempts; i++) {
+            try { return await fn(); } catch (e) { lastErr = e; }
+          }
+          throw lastErr;
+        };
+
         const [wRes, aRes, fRes] = await Promise.all([
-          watchAPI.getById(watchId),
-          appraisalAPI.getByWatch(watchId),
+          withRetry(() => watchAPI.getById(watchId)),
+          // appraisals: retry + fallback to cache by watch id
+          withRetry(() => appraisalAPI.getByWatch(watchId)),
           feedbackAPI.getAll().catch(() => ({ data: [] }))
         ]);
         const watchData = Array.isArray(wRes.data) ? (wRes.data[0] || null) : (wRes.data?.data || wRes.data || null);
         setWatch(watchData);
         const appData = Array.isArray(aRes.data) ? aRes.data : (aRes.data?.data || aRes.data?.appraisals || []);
         setAppraisals(appData || []);
+        try { localStorage.setItem(`appraisals_by_watch_${watchId}`, JSON.stringify({ data: appData, cachedAt: Date.now() })); } catch (_) {}
         const allFeedbacks = Array.isArray(fRes.data) ? fRes.data : (fRes.data?.data || []);
         const sellerId = watchData && (watchData.seller_id || watchData.sellerId);
         setFeedbacks((allFeedbacks || []).filter(f => Number(f.receiver_id) === Number(sellerId)));
@@ -124,15 +135,12 @@ const WatchDetails = () => {
         } catch (e2) {
           setError('Unable to load watch details');
         }
-        // Appraisals offline fallback
+        // Appraisals offline fallback by dedicated key
         try {
-          const rawA = localStorage.getItem('appraisals_cache');
+          const rawA = localStorage.getItem(`appraisals_by_watch_${id}`);
           const parsedA = rawA ? JSON.parse(rawA) : { data: [] };
-          const listA = (parsedA.data || []).filter(a => Number(a.watch_id) === Number(id));
-          setAppraisals(listA);
-        } catch (_) {
-          setAppraisals([]);
-        }
+          setAppraisals(parsedA.data || []);
+        } catch (_) { setAppraisals([]); }
         // Feedbacks offline fallback (by seller_id)
         try {
           const rawF = localStorage.getItem('feedbacks_cache');

@@ -99,7 +99,8 @@ const Header = () => {
       'buyer': '#3498db',
       'appraiser': '#f39c12',
       'admin': '#9b59b6',
-      'support': '#e67e22'
+      'support': '#e67e22',
+      'agent': '#e67e22'
     };
     return colors[role] || '#95a5a6';
   };
@@ -147,7 +148,7 @@ const Header = () => {
                 </>
               )}
               
-              {user.role === 'support' && (
+              {(user.role === 'support' || user.role === 'agent') && (
                 <>
                   <NavLink to="/support/feedback">Feedback</NavLink>
                   <NavLink to="/support/dashboard">Dashboard</NavLink>
