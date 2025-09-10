@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { watchAPI, appraisalAPI } from '../services/api';
+import { watchAPI, appraisalAPI, feedbackAPI, paymentAPI } from '../services/api';
 import Loading from './Common/Loading';
+import Button from './UI/Button';
+import { useAuth } from '../context/AuthContext';
+import Modal from './UI/Modal';
+import { Input, Select } from './UI/Input';
+import { toast } from 'react-toastify';
 
 const Container = styled.div`
   max-width: 1100px;
@@ -60,10 +65,20 @@ const SectionTitle = styled.h3`
 
 const WatchDetails = () => {
   const { id } = useParams();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [watch, setWatch] = useState(null);
   const [appraisals, setAppraisals] = useState([]);
+  const [feedbacks, setFeedbacks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  // purchase modal state
+  const [openPurchase, setOpenPurchase] = useState(false);
+  const [address, setAddress] = useState('');
+  const [notes, setNotes] = useState('');
+  const [method, setMethod] = useState('VNPAY');
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -77,38 +92,104 @@ const WatchDetails = () => {
             setWatch(cached);
           }
         }
-      } catch (_) {}
+      } catch (_) { }
 
       try {
         const watchId = Number(id);
-        const [wRes, aRes] = await Promise.all([
+        const [wRes, aRes, fRes] = await Promise.all([
           watchAPI.getById(watchId),
-          appraisalAPI.getByWatch(watchId)
+          appraisalAPI.getByWatch(watchId),
+          feedbackAPI.getAll().catch(() => ({ data: [] }))
         ]);
-        setWatch(wRes.data || null);
-        setAppraisals(aRes.data || []);
+        const watchData = Array.isArray(wRes.data) ? (wRes.data[0] || null) : (wRes.data?.data || wRes.data || null);
+        setWatch(watchData);
+        const appData = Array.isArray(aRes.data) ? aRes.data : (aRes.data?.data || aRes.data?.appraisals || []);
+        setAppraisals(appData || []);
+        const allFeedbacks = Array.isArray(fRes.data) ? fRes.data : (fRes.data?.data || []);
+        const sellerId = watchData && (watchData.seller_id || watchData.sellerId);
+        setFeedbacks((allFeedbacks || []).filter(f => Number(f.receiver_id) === Number(sellerId)));
       } catch (e) {
         // Fallback: try load all watches and find by id
         try {
           const watchId = Number(id);
           const all = await watchAPI.getAll();
-          const found = (all.data || []).find(w => Number(w.id) === watchId);
+          const allList = Array.isArray(all.data) ? all.data : (all.data?.data || []);
+          const found = (allList || []).find(w => Number(w.id) === watchId);
           if (found) {
             setWatch(found);
-            try { localStorage.setItem('watches_cache', JSON.stringify({ data: all.data || [], cachedAt: Date.now() })); } catch(_){}
+            try { localStorage.setItem('watches_cache', JSON.stringify({ data: allList || [], cachedAt: Date.now() })); } catch (_) { }
           } else {
             setError('Watch not found');
           }
         } catch (e2) {
           setError('Unable to load watch details');
         }
-        setAppraisals([]);
+        // Appraisals offline fallback
+        try {
+          const rawA = localStorage.getItem('appraisals_cache');
+          const parsedA = rawA ? JSON.parse(rawA) : { data: [] };
+          const listA = (parsedA.data || []).filter(a => Number(a.watch_id) === Number(id));
+          setAppraisals(listA);
+        } catch (_) {
+          setAppraisals([]);
+        }
+        // Feedbacks offline fallback (by seller_id)
+        try {
+          const rawF = localStorage.getItem('feedbacks_cache');
+          const parsedF = rawF ? JSON.parse(rawF) : { data: [] };
+          const sellerId = (watch && (watch.seller_id || watch.sellerId));
+          const listF = (parsedF.data || []).filter(f => Number(f.receiver_id) === Number(sellerId));
+          setFeedbacks(listF);
+        } catch (_) {
+          setFeedbacks([]);
+        }
       } finally {
         setLoading(false);
       }
     };
     load();
   }, [id]);
+
+  const formatPrice = (price) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(price);
+
+  const startPurchase = () => {
+    if (!user) { navigate('/login'); return; }
+    if (user.role !== 'buyer') { toast.warn('Only buyers can purchase'); return; }
+    setOpenPurchase(true);
+  };
+
+  const submitPurchase = async () => {
+    if (!watch || !watch.id) return;
+    if (!address.trim()) { toast.error('Please provide shipping address'); return; }
+    setSubmitting(true);
+    try {
+      const res = await paymentAPI.createOrder({
+        watch_id: Number(watch.id),
+        buyer_id: user.id,
+        payment_method: method,
+        shipping_address: address,
+        notes
+      });
+      const data = res.data || {};
+      if (data.payment_url && data.order_id) {
+        sessionStorage.setItem('last_order_id', String(data.order_id));
+        try {
+          const raw = localStorage.getItem('tx_history');
+          const arr = raw ? JSON.parse(raw) : [];
+          arr.push({ id: data.order_id, status: data.status || 'PENDING', amount: Number(watch.price || 0), buyer_id: user.id });
+          localStorage.setItem('tx_history', JSON.stringify(arr));
+        } catch (_) { }
+        window.location.href = data.payment_url;
+      } else {
+        toast.error('Failed to create payment session');
+      }
+    } catch (e) {
+      toast.error('Failed to process purchase. Please try again.');
+    } finally {
+      setSubmitting(false);
+      setOpenPurchase(false);
+    }
+  };
 
   if (loading) return <Loading />;
   if (!watch) return (
@@ -121,8 +202,6 @@ const WatchDetails = () => {
       </Section>
     </Container>
   );
-
-  const formatPrice = (price) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(price);
 
   return (
     <Container>
@@ -138,11 +217,16 @@ const WatchDetails = () => {
           <Title>{watch.name}</Title>
           <Brand>{watch.brand}</Brand>
           <Price>{formatPrice(watch.price)}</Price>
+          {user && user.role === 'buyer' && (
+            <div style={{ margin: '12px 0' }}>
+              <Button onClick={startPurchase} disabled={!watch || !watch.id}>Purchase</Button>
+            </div>
+          )}
 
           <Section>
             <SectionTitle>Description</SectionTitle>
             <div style={{ color: '#2c3e50' }}>
-              {watch.description || 'No description provided.'}
+              {(watch.description && String(watch.description).trim()) ? watch.description : 'No description provided.'}
             </div>
           </Section>
 
@@ -158,7 +242,7 @@ const WatchDetails = () => {
                       <strong>Status</strong>
                       <span style={{ color: a.status === 'completed' ? '#27ae60' : '#f39c12' }}>{a.status}</span>
                     </div>
-                    {a.es_value !== undefined && (
+                    {a.es_value !== undefined && a.es_value !== null && (
                       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <span>Estimated Value</span>
                         <span>{formatPrice(a.es_value)}</span>
@@ -172,8 +256,46 @@ const WatchDetails = () => {
               </div>
             )}
           </Section>
+
+          <Section>
+            <SectionTitle>Seller Reviews</SectionTitle>
+            {feedbacks.length === 0 ? (
+              <div style={{ color: '#7f8c8d' }}>No reviews yet.</div>
+            ) : (
+              <div style={{ display: 'grid', gap: '0.75rem' }}>
+                {feedbacks.map((fb) => (
+                  <div key={fb.id} style={{ padding: '0.75rem', background: '#f8f9fa', borderRadius: '8px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                      <strong>From User #{fb.sender_id}</strong>
+                      <span style={{ color: '#7f8c8d' }}>{new Date(fb.created_at).toLocaleString()}</span>
+                    </div>
+                    <div style={{ color: '#2c3e50' }}>{fb.content}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Section>
         </div>
       </Grid>
+
+      <Modal open={openPurchase} title={`Purchase ${watch.name}`} onClose={() => setOpenPurchase(false)}>
+        <div style={{ color: '#0f172a', fontWeight: 800, marginBottom: 8 }}>{watch.brand}</div>
+        <div style={{ color: '#16a34a', fontWeight: 800, marginBottom: 16 }}>{formatPrice(watch.price)}</div>
+        <Select label="Payment Method" value={method} onChange={(e) => setMethod(e.target.value)}>
+          <option value="VNPAY">VNPay</option>
+          <option value="MOMO">MoMo</option>
+          <option value="PAYPAL">PayPal</option>
+          <option value="CARD">Credit/Debit Card</option>
+        </Select>
+        <div style={{ height: 12 }} />
+        <Input label="Shipping Address *" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="City, street, ..." />
+        <div style={{ height: 12 }} />
+        <Input label="Additional Notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Notes for seller" />
+        <div style={{ height: 16 }} />
+        <Button onClick={submitPurchase} disabled={submitting}>
+          {submitting ? 'Processing...' : 'Complete Purchase'}
+        </Button>
+      </Modal>
     </Container>
   );
 };

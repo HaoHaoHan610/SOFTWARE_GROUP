@@ -50,12 +50,12 @@ const ProtectedRoute = ({ children, requiredRoles = [] }) => {
   if (!user) {
     return (
       <ErrorContainer>
-        <ErrorTitle>🔒 Access Denied</ErrorTitle>
+        <ErrorTitle>🔒 Từ chối truy cập</ErrorTitle>
         <ErrorMessage>
-          You need to be logged in to access this page. Please log in with your credentials.
+          Bạn cần đăng nhập để truy cập trang này. Vui lòng đăng nhập bằng tài khoản của bạn.
         </ErrorMessage>
         <LoginButton onClick={() => window.location.href = '/login'}>
-          Go to Login
+          Đi tới trang Đăng nhập
         </LoginButton>
       </ErrorContainer>
     );
@@ -64,14 +64,14 @@ const ProtectedRoute = ({ children, requiredRoles = [] }) => {
   if (requiredRoles.length > 0 && !requiredRoles.includes(user.role)) {
     return (
       <ErrorContainer>
-        <ErrorTitle>🚫 Insufficient Permissions</ErrorTitle>
+        <ErrorTitle>🚫 Không đủ quyền</ErrorTitle>
         <ErrorMessage>
-          You don't have the required permissions to access this page. 
-          Required role: {requiredRoles.join(' or ')}. 
-          Your role: {user.role}
+          Bạn không có quyền truy cập trang này.
+          Vai trò yêu cầu: {requiredRoles.join(' hoặc ')}.
+          Vai trò của bạn: {user.role}
         </ErrorMessage>
         <LoginButton onClick={() => window.location.href = '/dashboard'}>
-          Go to Dashboard
+          Về trang Dashboard
         </LoginButton>
       </ErrorContainer>
     );

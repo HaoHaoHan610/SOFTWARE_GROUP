@@ -148,7 +148,7 @@ const CreateWatchForm = ({ onWatchCreated, sellerId }) => {
 
       const response = await watchAPI.create(watchData);
       onWatchCreated(response.data);
-      
+
       // Reset form
       setFormData({
         name: '',
@@ -160,11 +160,30 @@ const CreateWatchForm = ({ onWatchCreated, sellerId }) => {
         year: '',
         condition: 'excellent'
       });
-      
+
     } catch (error) {
       console.error('Error creating watch:', error);
-      const detail = error.response?.data ? JSON.stringify(error.response.data) : error.message;
-      toast.error(`Failed to create watch listing: ${detail}`);
+      // Offline/local fallback
+      const tempId = Date.now();
+      const localWatch = {
+        id: tempId,
+        name: formData.name,
+        brand: formData.brand,
+        price: parseFloat(formData.price || 0),
+        img: formData.img,
+        existing_status: !!formData.existing_status,
+        seller_id: sellerId,
+        description: formData.description || '',
+        created_at: new Date().toISOString(),
+      };
+      try {
+        const raw = localStorage.getItem('watches_cache');
+        const parsed = raw ? JSON.parse(raw) : { data: [] };
+        const next = { data: [...(parsed.data || []), localWatch], cachedAt: Date.now() };
+        localStorage.setItem('watches_cache', JSON.stringify(next));
+      } catch (_) { }
+      onWatchCreated(localWatch);
+      toast.warn('API lỗi, đã tạo listing tạm thời (offline).');
     } finally {
       setLoading(false);
     }
@@ -186,7 +205,7 @@ const CreateWatchForm = ({ onWatchCreated, sellerId }) => {
               placeholder="e.g., Rolex Submariner"
             />
           </FormGroup>
-          
+
           <FormGroup>
             <Label htmlFor="brand">Brand *</Label>
             <Input
@@ -215,7 +234,7 @@ const CreateWatchForm = ({ onWatchCreated, sellerId }) => {
               max={new Date().getFullYear()}
             />
           </FormGroup>
-          
+
           <FormGroup>
             <Label htmlFor="price">Price (USD) *</Label>
             <Input
@@ -248,7 +267,7 @@ const CreateWatchForm = ({ onWatchCreated, sellerId }) => {
               <option value="poor">Poor</option>
             </Select>
           </FormGroup>
-          
+
           <FormGroup>
             <Label htmlFor="img">Image URL *</Label>
             <Input

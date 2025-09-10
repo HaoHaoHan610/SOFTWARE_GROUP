@@ -184,7 +184,25 @@ const WatchCard = ({ watch, appraisals, onWatchUpdated, onWatchDeleted }) => {
       onWatchDeleted(watch.id);
     } catch (error) {
       console.error('Error deleting watch:', error);
-      toast.error('Failed to delete watch');
+      // Soft delete fallback: set existing_status = false
+      try {
+        await watchAPI.update(watch.id, { existing_status: false });
+        const updated = { ...watch, existing_status: false };
+        onWatchUpdated(updated);
+        toast.warn('Cannot delete due to references. Marked as inactive.');
+        return;
+      } catch (_) { }
+      // Offline/local fallback delete
+      try {
+        const raw = localStorage.getItem('watches_cache');
+        const parsed = raw ? JSON.parse(raw) : { data: [] };
+        const next = { data: (parsed.data || []).filter(w => w.id !== watch.id), cachedAt: Date.now() };
+        localStorage.setItem('watches_cache', JSON.stringify(next));
+        onWatchDeleted(watch.id);
+        toast.warn('API lỗi, đã xóa listing trong cache (offline).');
+      } catch (_) {
+        toast.error('Failed to delete watch');
+      }
     } finally {
       setLoading(false);
     }
@@ -198,12 +216,29 @@ const WatchCard = ({ watch, appraisals, onWatchUpdated, onWatchDeleted }) => {
         details: `Appraisal requested for ${watch.name} by ${watch.brand}`,
         status: 'pending'
       };
-      
+
       await appraisalAPI.create(appraisalData);
       toast.success('Appraisal request submitted successfully!');
     } catch (error) {
       console.error('Error requesting appraisal:', error);
-      toast.error('Failed to request appraisal');
+      // Offline/local fallback appraisal
+      try {
+        const rawA = localStorage.getItem('appraisals_cache');
+        const parsedA = rawA ? JSON.parse(rawA) : { data: [] };
+        const localItem = {
+          id: Date.now(),
+          watch_id: watch.id,
+          es_value: null,
+          con_note: null,
+          status: 'pending',
+          created_at: new Date().toISOString(),
+        };
+        const nextA = { data: [...(parsedA.data || []), localItem], cachedAt: Date.now() };
+        localStorage.setItem('appraisals_cache', JSON.stringify(nextA));
+        toast.warn('API lỗi, đã lưu yêu cầu thẩm định tạm thời (offline).');
+      } catch (_) {
+        toast.error('Failed to request appraisal');
+      }
     } finally {
       setLoading(false);
     }
@@ -234,12 +269,12 @@ const WatchCard = ({ watch, appraisals, onWatchUpdated, onWatchDeleted }) => {
             <span>🕰️</span>
           )}
         </ImageContainer>
-        
+
         <Content>
           <Title>{watch.name}</Title>
           <Brand>{watch.brand}</Brand>
           <Price>{formatPrice(watch.price)}</Price>
-          
+
           <Status active={watch.existing_status}>
             {watch.existing_status ? 'Active' : 'Sold'}
           </Status>
@@ -249,7 +284,7 @@ const WatchCard = ({ watch, appraisals, onWatchUpdated, onWatchDeleted }) => {
               <AppraisalTitle>Latest Appraisal</AppraisalTitle>
               <AppraisalItem>
                 <span>Status:</span>
-                <span style={{ 
+                <span style={{
                   color: latestAppraisal.status === 'completed' ? '#27ae60' : '#f39c12',
                   fontWeight: '600'
                 }}>
@@ -275,10 +310,10 @@ const WatchCard = ({ watch, appraisals, onWatchUpdated, onWatchDeleted }) => {
               {loading ? '...' : 'Delete'}
             </DeleteButton>
           </ButtonGroup>
-          
+
           {!latestAppraisal && (
-            <RequestAppraisalButton 
-              onClick={handleRequestAppraisal} 
+            <RequestAppraisalButton
+              onClick={handleRequestAppraisal}
               disabled={loading}
               style={{ marginTop: '0.5rem', width: '100%' }}
             >

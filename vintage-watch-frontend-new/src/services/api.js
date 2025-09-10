@@ -18,23 +18,30 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 // Response interceptor to handle errors
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Mark network errors
+    if (!error.response) {
+      error.isNetworkError = true;
+      return Promise.reject(error);
+    }
+
     if (error.response?.status === 401) {
+      // Only force logout if we actually reached the server
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      window.location.href = '/login';
+      // Do not auto-redirect; let UI decide
     }
     return Promise.reject(error);
   }
 );
+
+export const isOfflineError = (err) => !!(err && (!err.response || err.isNetworkError));
 
 // User API
 export const userAPI = {
@@ -63,7 +70,7 @@ export const appraisalAPI = {
   getByAppraiser: (appraiserId) => api.get(`/appraisals/appraiser/${appraiserId}`),
   create: (appraisalData) => api.post('/appraisals/', appraisalData),
   update: (id, appraisalData) => api.put(`/appraisals/${id}`, appraisalData),
-  updateByWatch: (appraiserId, watchId, appraisalData) => 
+  updateByWatch: (appraiserId, watchId, appraisalData) =>
     api.put(`/appraisals/appraiser/${appraiserId}/watch/${watchId}`, appraisalData),
   delete: (id) => api.delete(`/appraisals/${id}`),
 };
@@ -104,6 +111,26 @@ export const feedbackAPI = {
   create: (feedbackData) => api.post('/feedbacks/', feedbackData),
   update: (id, feedbackData) => api.put(`/feedbacks/${id}`, feedbackData),
   delete: (id) => api.delete(`/feedbacks/${id}`),
+};
+
+// Payment/Checkout API (spec from doc)
+export const paymentAPI = {
+  createOrder: async (payload) => {
+    try {
+      return await api.post('/api/orders', payload);
+    } catch (e) {
+      // fallback to legacy route
+      return api.post('/orders', payload);
+    }
+  },
+  getOrder: async (orderId) => {
+    try {
+      return await api.get(`/api/orders/${orderId}`);
+    } catch (e) {
+      return api.get(`/orders/${orderId}`);
+    }
+  },
+  // Webhook is backend-only; no FE method
 };
 
 export default api;

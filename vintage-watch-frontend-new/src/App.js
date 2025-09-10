@@ -18,6 +18,8 @@ import WatchDetails from './components/WatchDetails';
 import ReportIssue from './components/Support/ReportIssue';
 import MyOrders from './components/Buyer/MyOrders';
 import Cart from './components/Buyer/Cart';
+import CheckoutPage from './components/Checkout/CheckoutPage';
+import PaymentReturn from './components/Checkout/PaymentReturn';
 
 const AppContent = () => {
   const { user, loading } = useAuth();
@@ -46,6 +48,8 @@ const AppContent = () => {
       <Route path="/report" element={<Layout><ReportIssue /></Layout>} />
       <Route path="/orders" element={<Layout><MyOrders /></Layout>} />
       <Route path="/cart" element={<Layout><Cart /></Layout>} />
+      <Route path="/checkout" element={<Layout><CheckoutPage /></Layout>} />
+      <Route path="/payment/return" element={<Layout><PaymentReturn /></Layout>} />
 
       {/* Root redirect no longer needed since Home is default */}
 

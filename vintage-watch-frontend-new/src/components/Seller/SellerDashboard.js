@@ -114,6 +114,10 @@ const EmptyState = styled.div`
   }
 `;
 
+const Toggle = styled.label`
+  display: flex; align-items: center; gap: 8px; color: #475569; font-weight: 600;
+`;
+
 const SellerDashboard = () => {
   const { user } = useAuth();
   const [watches, setWatches] = useState([]);
@@ -121,6 +125,7 @@ const SellerDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [usingCache, setUsingCache] = useState(false);
+  const [showInactive, setShowInactive] = useState(false);
 
   useEffect(() => {
     fetchSellerData();
@@ -131,7 +136,6 @@ const SellerDashboard = () => {
     (items || []).forEach((w) => {
       if (!map.has(w.id)) map.set(w.id, w);
       else {
-        // Prefer the latest truthy fields
         map.set(w.id, { ...map.get(w.id), ...w });
       }
     });
@@ -145,18 +149,10 @@ const SellerDashboard = () => {
       const list = dedupeById(watchesResponse.data || []);
       setWatches(list);
       setUsingCache(false);
-      try { localStorage.setItem('watches_cache', JSON.stringify({ data: list, cachedAt: Date.now() })); } catch(_){}
-
-      try {
-        const appraisalsResponse = await appraisalAPI.getAll();
-        setAppraisals(appraisalsResponse.data || []);
-      } catch (err) {
-        console.warn('Appraisals endpoint unavailable:', err);
-        setAppraisals([]);
-      }
-    } catch (error) {
+      try { localStorage.setItem('watches_cache', JSON.stringify({ data: list, cachedAt: Date.now() })); } catch (_) { }
+    }
+    catch (error) {
       console.error('Error fetching seller data:', error);
-      // Fallback to cached watches for this seller
       try {
         const raw = localStorage.getItem('watches_cache');
         const parsed = raw ? JSON.parse(raw) : null;
@@ -170,6 +166,13 @@ const SellerDashboard = () => {
     } finally {
       setLoading(false);
     }
+    try {
+      const appraisalsResponse = await appraisalAPI.getAll();
+      setAppraisals(appraisalsResponse.data || []);
+    } catch (err) {
+      console.warn('Appraisals endpoint unavailable:', err);
+      setAppraisals([]);
+    }
   };
 
   const handleWatchCreated = (newWatch) => {
@@ -179,14 +182,19 @@ const SellerDashboard = () => {
   };
 
   const handleWatchUpdated = (updatedWatch) => {
-    setWatches((prev) => dedupeById(prev.map(watch => 
-      watch.id === updatedWatch.id ? updatedWatch : watch
-    )));
+    setWatches((prev) => {
+      const next = prev.map(watch => watch.id === updatedWatch.id ? { ...watch, ...updatedWatch } : watch);
+      // If updated to inactive and we are hiding inactive, remove from list
+      if (updatedWatch && updatedWatch.existing_status === false && !showInactive) {
+        return next.filter(w => w.existing_status !== false);
+      }
+      return dedupeById(next);
+    });
     toast.success('Watch updated successfully!');
   };
 
   const handleWatchDeleted = (watchId) => {
-    setWatches(watches.filter(watch => watch.id !== watchId));
+    setWatches((prev) => (prev || []).filter(watch => watch.id !== watchId));
     toast.success('Watch deleted successfully!');
   };
 
@@ -194,13 +202,15 @@ const SellerDashboard = () => {
     return appraisals.filter(appraisal => appraisal.watch_id === watchId);
   };
 
+  const filteredWatches = (watches || []).filter(w => showInactive ? true : w.existing_status !== false);
+
   const stats = {
     totalListings: watches.length,
     activeListings: watches.filter(w => w.existing_status).length,
-    totalAppraisals: appraisals.filter(a => 
+    totalAppraisals: appraisals.filter(a =>
       watches.some(w => w.id === a.watch_id)
     ).length,
-    pendingAppraisals: appraisals.filter(a => 
+    pendingAppraisals: appraisals.filter(a =>
       watches.some(w => w.id === a.watch_id) && a.status === 'pending'
     ).length
   };
@@ -229,9 +239,15 @@ const SellerDashboard = () => {
       )}
       <Header>
         <Title>Seller Dashboard</Title>
-        <Button onClick={() => setShowCreateForm(true)}>
-          + Add New Watch
-        </Button>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <Toggle>
+            <input type="checkbox" checked={showInactive} onChange={(e) => setShowInactive(e.target.checked)} />
+            Show inactive
+          </Toggle>
+          <Button onClick={() => setShowCreateForm(true)}>
+            + Add New Watch
+          </Button>
+        </div>
       </Header>
 
       <StatsGrid>
@@ -257,14 +273,14 @@ const SellerDashboard = () => {
         <Section>
           <SectionHeader>
             <SectionTitle>Create New Watch Listing</SectionTitle>
-            <Button 
+            <Button
               onClick={() => setShowCreateForm(false)}
               style={{ background: '#e74c3c' }}
             >
               Cancel
             </Button>
           </SectionHeader>
-          <CreateWatchForm 
+          <CreateWatchForm
             onWatchCreated={handleWatchCreated}
             sellerId={user.id}
           />
@@ -275,15 +291,14 @@ const SellerDashboard = () => {
         <SectionHeader>
           <SectionTitle>My Watch Listings</SectionTitle>
         </SectionHeader>
-        
-        {watches.length === 0 ? (
+        {filteredWatches.length === 0 ? (
           <EmptyState>
             <h3>No watch listings yet</h3>
             <p>Start by adding your first vintage watch to the marketplace.</p>
           </EmptyState>
         ) : (
           <WatchesGrid>
-            {watches.map(watch => (
+            {filteredWatches.map(watch => (
               <WatchCard
                 key={watch.id}
                 watch={watch}
