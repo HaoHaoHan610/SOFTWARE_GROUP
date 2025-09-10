@@ -49,6 +49,20 @@ def list_transactions():
     return jsonify(response_schema.dump(transactions)), 200
 
 
+@bp.route("/<int:transaction_id>", methods=["PUT"])
+def update_transaction(transaction_id):
+    data = request.get_json() or {}
+    status = data.get("status")
+    amount = data.get("amount")
+
+    updated = transaction_service.update_transaction(transaction_id, status=status, amount=amount)
+    if not updated:
+        return jsonify({"error": "Transaction not found"}), 404
+
+    response_schema = TransactionResponseSchema()
+    return jsonify(response_schema.dump(updated)), 200
+
+
 # -------------------- Escrow --------------------
 @bp.route("/escrow/create", methods=["POST"])
 def create_escrow():
@@ -107,12 +121,14 @@ def update_escrow_status():
     data = request.get_json()
     schema = EscrowRequestSchema()
     errors = schema.validate(data)
-    
+    if errors:
+        return jsonify(errors), 400
+
     escrow = escrow_service.update_transactions_status(
         transaction_id=data.get("transaction_id"),
         status= data.get("status")
     )
-    if not errors:
+    if not escrow:
         return jsonify({"error": "Escrow or Transactions not found"}), 404
 
     response_schema = EscrowResponseSchema(many=True)

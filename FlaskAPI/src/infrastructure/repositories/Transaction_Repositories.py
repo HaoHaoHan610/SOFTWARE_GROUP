@@ -41,6 +41,19 @@ class TransactionRepository:
     def list_transactions(self) -> List[TransactionModel]:
         return self.session.query(TransactionModel).all()
 
+    def update_transaction(self, transaction_id: int, status: Optional[str] = None,
+                           amount: Optional[float] = None) -> Optional[TransactionModel]:
+        tx = self.session.query(TransactionModel).filter_by(id=transaction_id).first()
+        if not tx:
+            return None
+        if status is not None:
+            tx.status = status
+        if amount is not None:
+            tx.amount = amount
+        self.session.commit()
+        self.session.refresh(tx)
+        return tx
+
 
 class EscrowRepository:
     def __init__(self, session: Session = session):

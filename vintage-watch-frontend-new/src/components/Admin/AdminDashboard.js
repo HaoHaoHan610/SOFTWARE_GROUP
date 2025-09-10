@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { userAPI, transactionAPI, orderAPI } from '../../services/api';
 import { toast } from 'react-toastify';
@@ -94,6 +95,8 @@ const LoadingSpinner = styled.div`
 
 const AdminDashboard = () => {
   const { user } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('users');
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -106,6 +109,20 @@ const AdminDashboard = () => {
   useEffect(() => {
     fetchAdminData();
   }, []);
+
+  // Sync tab with URL path so /admin/transactions shows the correct tab
+  useEffect(() => {
+    const path = location.pathname || '';
+    if (path.includes('/admin/transactions')) {
+      setActiveTab('transactions');
+    } else if (path.includes('/admin/users')) {
+      setActiveTab('users');
+    } else if (path.includes('/admin/settings')) {
+      setActiveTab('settings');
+    } else if (path.endsWith('/admin')) {
+      setActiveTab('users');
+    }
+  }, [location.pathname]);
 
   const fetchAdminData = async () => {
     try {
@@ -180,19 +197,19 @@ const AdminDashboard = () => {
         <TabContainer>
           <Tab 
             active={activeTab === 'users'} 
-            onClick={() => setActiveTab('users')}
+            onClick={() => { setActiveTab('users'); navigate('/admin/users'); }}
           >
             User Management
           </Tab>
           <Tab 
             active={activeTab === 'transactions'} 
-            onClick={() => setActiveTab('transactions')}
+            onClick={() => { setActiveTab('transactions'); navigate('/admin/transactions'); }}
           >
             Transaction Monitor
           </Tab>
           <Tab 
             active={activeTab === 'settings'} 
-            onClick={() => setActiveTab('settings')}
+            onClick={() => { setActiveTab('settings'); navigate('/admin/settings'); }}
           >
             System Settings
           </Tab>

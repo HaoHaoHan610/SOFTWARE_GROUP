@@ -29,14 +29,23 @@ def get_user(feedback_id):
 
 @bp.route("/", methods=["POST"])
 def add_feedbackr():
-    data = request.get_json()
-    errors = request_schema.validate(data)
+    data = request.get_json() or {}
+    errors = request_schema.validate(data, partial=("receiver_id" not in data))
     if errors:
         return jsonify(errors), 400
+    sender_id = data.get("sender_id")
+    content = data.get("content")
+    receiver_id = data.get("receiver_id")
+
+    if receiver_id is None:
+        # Broadcast to all agents when no receiver provided
+        created = feedback_service.create_feedback_broadcast_to_agents(sender_id=sender_id, content=content)
+        return response_schema.dump(created, many=True), 201
+
     new_feedback = feedback_service.create_feedback(
-        sender_id=data.get("sender_id"),
-        receiver_id=data.get("receiver_id"),
-        content=data.get("content")
+        sender_id=sender_id,
+        receiver_id=receiver_id,
+        content=content
     )
     return response_schema.dump(new_feedback), 201
 

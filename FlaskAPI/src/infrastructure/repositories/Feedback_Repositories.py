@@ -17,7 +17,7 @@ class FeedbackRepository:
                 sender_id=feedback.sender_id,
                 receiver_id = feedback.receiver_id,
                 content=  feedback.content,
-                created_at = feedback.created_at
+                created_at = feedback.created_at or datetime.utcnow()
             )
             self.session.add(feedbackobj)
             self.session.commit()
@@ -73,9 +73,9 @@ class FeedbackRepository:
         finally:
             self.session.close() 
 
-    def get_by_receiver_id(self, receiver_id: int) -> List[Feedback]:
-        """Lấy tất cả appraisal của một watch"""
-        return self.session.query(Feedback).filter_by(receiver_id=receiver_id).all()
+    def get_by_receiver_id(self, receiver_id: int) -> List[FeedbackModel]:
+        """Lấy tất cả feedback theo agent cụ thể"""
+        return self.session.query(FeedbackModel).filter_by(receiver_id=receiver_id).all()
     
     def get_feedback_for_agent(self) -> List[FeedbackModel]:
         return (
@@ -84,3 +84,29 @@ class FeedbackRepository:
             .filter(UserModel.role == 'agent')
             .all()
         ) 
+
+    # Helpers for broadcasting to all agents
+    def get_all_agents(self) -> List[UserModel]:
+        return self.session.query(UserModel).filter(UserModel.role == 'agent').all()
+
+    def add_bulk(self, feedbacks: List[Feedback]) -> List[FeedbackModel]:
+        created: List[FeedbackModel] = []
+        try:
+            for fb in feedbacks:
+                obj = FeedbackModel(
+                    sender_id=fb.sender_id,
+                    receiver_id=fb.receiver_id,
+                    content=fb.content,
+                    created_at=fb.created_at or datetime.utcnow(),
+                )
+                self.session.add(obj)
+                created.append(obj)
+            self.session.commit()
+            for obj in created:
+                self.session.refresh(obj)
+            return created
+        except Exception:
+            self.session.rollback()
+            raise
+        finally:
+            self.session.close()

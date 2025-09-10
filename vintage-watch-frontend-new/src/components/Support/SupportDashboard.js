@@ -111,7 +111,7 @@ const SupportDashboard = () => {
     try {
       setLoading(true);
       const [feedbackResponse] = await Promise.all([
-        feedbackAPI.getAll()
+        feedbackAPI.getByAgent()
       ]);
       
       const feedback = feedbackResponse.data || [];

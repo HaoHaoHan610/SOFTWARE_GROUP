@@ -159,13 +159,14 @@ const FeedbackForm = ({ onFeedbackSubmitted }) => {
     setLoading(true);
 
     try {
-      const feedbackData = {
-        ...formData,
-        user_id: user.id,
-        status: 'open'
+      // Backend sẽ broadcast tới tất cả agent nếu không truyền receiver_id/agent_id
+      const payload = {
+        sender_id: user?.id,
+        receiver_id: formData.agent_id || undefined,
+        content: `[${formData.category}] ${formData.subject}\n${formData.message}${formData.order_id ? `\nOrder: #${formData.order_id}` : ''}`
       };
 
-      await feedbackAPI.create(feedbackData);
+      await feedbackAPI.create(payload);
       onFeedbackSubmitted();
       
       // Reset form

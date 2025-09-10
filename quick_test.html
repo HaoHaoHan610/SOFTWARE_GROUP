@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quick API Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .test-result { margin: 15px 0; padding: 15px; border-radius: 5px; border-left: 4px solid; }
+        .success { background: #d4edda; border-color: #28a745; color: #155724; }
+        .error { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+        .info { background: #d1ecf1; border-color: #17a2b8; color: #0c5460; }
+        button { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; cursor: pointer; margin: 5px; font-size: 16px; }
+        button:hover { background: #0056b3; }
+        .user-list { background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px; }
+        .user-item { padding: 5px 0; border-bottom: 1px solid #dee2e6; }
+        .user-item:last-child { border-bottom: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 API Connection Test</h1>
+        <p>Testing connection to your Flask API at <strong>172.31.80.1:5000</strong></p>
+        
+        <button onclick="testAll()">🚀 Test All Endpoints</button>
+        <button onclick="testUsers()">👥 Test Users Only</button>
+        <button onclick="clearResults()">🗑️ Clear Results</button>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://172.31.80.1:5000';
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            document.getElementById('results').appendChild(div);
+        }
+        
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+        
+        async function testUsers() {
+            addResult('🔄 Testing users endpoint...', 'info');
+            try {
+                const response = await fetch(`${API_URL}/users/all`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    addResult(`✅ Users endpoint working! Found ${data.length} users`, 'success');
+                    
+                    if (data.length > 0) {
+                        let userList = '<div class="user-list"><strong>Your Users:</strong>';
+                        data.slice(0, 5).forEach(user => {
+                            userList += `<div class="user-item">👤 ${user.username || user.email} (${user.role})</div>`;
+                        });
+                        if (data.length > 5) {
+                            userList += `<div class="user-item">... and ${data.length - 5} more users</div>`;
+                        }
+                        userList += '</div>';
+                        addResult(userList, 'success');
+                    } else {
+                        addResult('⚠️ No users found in database', 'info');
+                    }
+                } else {
+                    addResult(`❌ Users endpoint error: ${response.status} - ${response.statusText}`, 'error');
+                }
+            } catch (error) {
+                addResult(`❌ Connection failed: ${error.message}`, 'error');
+                addResult('💡 Make sure your Flask API is running on 172.31.80.1:5000', 'info');
+            }
+        }
+        
+        async function testAll() {
+            clearResults();
+            addResult('🚀 Starting comprehensive API test...', 'info');
+            
+            // Test home endpoint
+            try {
+                const response = await fetch(`${API_URL}/`);
+                if (response.ok) {
+                    addResult('✅ Home endpoint working', 'success');
+                } else {
+                    addResult(`❌ Home endpoint error: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                addResult(`❌ Home endpoint failed: ${error.message}`, 'error');
+            }
+            
+            // Test users
+            await testUsers();
+            
+            // Test watches
+            try {
+                const response = await fetch(`${API_URL}/watches/all`);
+                const data = await response.json();
+                if (response.ok) {
+                    addResult(`✅ Watches endpoint working! Found ${data.length} watches`, 'success');
+                } else {
+                    addResult(`❌ Watches endpoint error: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                addResult(`❌ Watches endpoint failed: ${error.message}`, 'error');
+            }
+            
+            addResult('🏁 Test completed!', 'info');
+        }
+    </script>
+</body>
+</html>

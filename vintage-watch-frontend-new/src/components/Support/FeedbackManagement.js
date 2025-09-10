@@ -232,7 +232,7 @@ const FeedbackManagement = () => {
   const fetchFeedback = async () => {
     try {
       setLoading(true);
-      const response = await feedbackAPI.getAll();
+      const response = await feedbackAPI.getByAgent();
       setFeedback(response.data || []);
     } catch (error) {
       console.error('Error fetching feedback:', error);

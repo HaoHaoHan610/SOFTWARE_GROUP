@@ -18,6 +18,9 @@ class TransactionService:
     def list_transactions(self) -> List[TransactionModel]:
         return self.transaction_repo.list_transactions()
     
+    def update_transaction(self, transaction_id: int, status: str = None, amount: float = None) -> Optional[TransactionModel]:
+        return self.transaction_repo.update_transaction(transaction_id, status=status, amount=amount)
+    
 
 
 class EscrowService:

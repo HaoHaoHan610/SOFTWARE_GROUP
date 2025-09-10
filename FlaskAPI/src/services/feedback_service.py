@@ -21,6 +21,16 @@ class FeedbackService:
         )
         return self.repository.add(feedback=feedback)
 
+    def create_feedback_broadcast_to_agents(self, sender_id: int, content: str):
+        agents = self.repository.get_all_agents()
+        if not agents:
+            raise ValueError("No agents available")
+        feedbacks = [
+            Feedback(id=None, sender_id=sender_id, receiver_id=agent.id, content=content)
+            for agent in agents
+        ]
+        return self.repository.add_bulk(feedbacks)
+
     def get_feedback(self, id: int):
         return self.repository.get_by_id(id=id)
 
