@@ -31,6 +31,7 @@ class OrderDetail_Repository:
             orderdetail_obj = OrderDetailModel(
                 order_id=order_detail.order_id,
                 watch_id=order_detail.watch_id,
+                quantity=order_detail.quantity or 1,
             )
             self.session.add(orderdetail_obj)
             self.session.commit()

@@ -86,11 +86,11 @@ export const orderAPI = {
 
 // Order Detail API
 export const orderDetailAPI = {
-  getAll: () => api.get('/order-details/all'),
-  getById: (id) => api.get(`/order-details/${id}`),
-  create: (orderDetailData) => api.post('/order-details/', orderDetailData),
-  update: (id, orderDetailData) => api.put(`/order-details/${id}`, orderDetailData),
-  delete: (id) => api.delete(`/order-details/${id}`),
+  getAll: () => api.get('/orderdetails/all'),
+  getByOrder: (orderId) => api.get(`/orderdetails/order/${orderId}`),
+  create: (orderDetailData) => api.post('/orderdetails/', orderDetailData),
+  update: (id, orderDetailData) => api.put(`/orderdetails/${id}`, orderDetailData),
+  deleteOrder: (orderId) => api.delete(`/orderdetails/order/${orderId}`),
 };
 
 // Transaction API

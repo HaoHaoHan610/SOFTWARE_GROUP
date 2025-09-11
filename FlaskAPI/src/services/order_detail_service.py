@@ -12,12 +12,14 @@ class Order_Detail_Service:
     def create_order_detail(
         self,
         order_id:int,
-        watch_id:int
+        watch_id:int,
+        quantity:int = 1
     ) -> OrderDetailModel:
         """Tạo Order_detail mới"""
         detail = OrderDetail(
             order_id=order_id,
-            watch_id=watch_id
+            watch_id=watch_id,
+            quantity=quantity
         )
         return self.repository.add(detail)
     

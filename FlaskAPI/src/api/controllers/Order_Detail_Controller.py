@@ -39,6 +39,7 @@ def add_detail():
     new_detail = detail_service.create_order_detail(
         order_id=data.get("order_id"),
         watch_id=data.get("watch_id"),
+        quantity=data.get("quantity", 1)
     )
 
     if not new_detail:
