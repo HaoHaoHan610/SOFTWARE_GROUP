@@ -3,6 +3,7 @@ from infrastructure.models.TransactionModel import TransactionModel, EscrowModel
 from infrastructure.models.Order_DetailModel import OrderDetailModel
 from infrastructure.models.OrderModel import OrderModel
 from infrastructure.models.WatchModel import WatchModel
+from sqlalchemy import update as sa_update
 from infrastructure.databases.mssql import session
 from typing import Optional, List
 from datetime import datetime
@@ -145,4 +146,13 @@ class EscrowRepository:
         transactions = self.get_transaction(transaction_id=transaction_id)
         for trans in transactions:
             self.release_escrow(trans.id)
+
+        # Also mark associated watches as sold (existing_status = False)
+        transaction = self.session.query(TransactionModel).filter_by(id=transaction_id).first()
+        if transaction:
+            details = self.session.query(OrderDetailModel).filter_by(order_id=transaction.order_id).all()
+            watch_ids = [d.watch_id for d in details]
+            if watch_ids:
+                self.session.query(WatchModel).filter(WatchModel.id.in_(watch_ids)).update({WatchModel.existing_status: False}, synchronize_session=False)
+                self.session.commit()
         return transactions
