@@ -154,5 +154,10 @@ class EscrowRepository:
             watch_ids = [d.watch_id for d in details]
             if watch_ids:
                 self.session.query(WatchModel).filter(WatchModel.id.in_(watch_ids)).update({WatchModel.existing_status: False}, synchronize_session=False)
-                self.session.commit()
+            # Mark order and transaction as completed
+            order = self.session.query(OrderModel).filter_by(id=transaction.order_id).first()
+            if order:
+                order.status = "Completed"
+            transaction.status = "completed"
+            self.session.commit()
         return transactions
