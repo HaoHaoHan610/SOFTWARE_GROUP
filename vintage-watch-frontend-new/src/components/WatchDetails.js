@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { watchAPI, appraisalAPI, feedbackAPI, paymentAPI } from '../services/api';
+import { watchAPI, appraisalAPI, feedbackAPI, orderAPI, orderDetailAPI, transactionAPI } from '../services/api';
 import Loading from './Common/Loading';
 import Button from './UI/Button';
 import { useAuth } from '../context/AuthContext';
@@ -171,26 +171,27 @@ const WatchDetails = () => {
     if (!address.trim()) { toast.error('Please provide shipping address'); return; }
     setSubmitting(true);
     try {
-      const res = await paymentAPI.createOrder({
-        watch_id: Number(watch.id),
-        buyer_id: user.id,
-        payment_method: method,
-        shipping_address: address,
-        notes
+      // 1) Create order
+      const orderRes = await orderAPI.create({
+        customer_id: user.id,
+        address,
+        amount: Number(watch.price || 0),
+        status: 'pending'
       });
-      const data = res.data || {};
-      if (data.payment_url && data.order_id) {
-        sessionStorage.setItem('last_order_id', String(data.order_id));
-        try {
-          const raw = localStorage.getItem('tx_history');
-          const arr = raw ? JSON.parse(raw) : [];
-          arr.push({ id: data.order_id, status: data.status || 'PENDING', amount: Number(watch.price || 0), buyer_id: user.id });
-          localStorage.setItem('tx_history', JSON.stringify(arr));
-        } catch (_) { }
-        window.location.href = data.payment_url;
-      } else {
-        toast.error('Failed to create payment session');
-      }
+      const orderId = orderRes.data?.id;
+      if (!orderId) throw new Error('Order creation failed');
+
+      // 2) Add order detail
+      await orderDetailAPI.create({
+        order_id: orderId,
+        watch_id: Number(watch.id),
+        quantity: 1
+      });
+
+      // 3) Checkout (transaction + escrows)
+      await transactionAPI.checkout(orderId);
+
+      toast.success('Purchase initiated! Funds held in escrow until delivery.');
     } catch (e) {
       toast.error('Failed to process purchase. Please try again.');
     } finally {
