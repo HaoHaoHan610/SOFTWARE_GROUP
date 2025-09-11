@@ -1,5 +1,7 @@
 from flask import Blueprint, request, jsonify
 from services.transaction_service import TransactionService, EscrowService
+from services.order_service import OrderService
+from infrastructure.repositories.Order_Repositories import OrderRepository
 from infrastructure.repositories.Transaction_Repositories import TransactionRepository, EscrowRepository
 from api.schemas.TransactionSchema import (
     TransactionRequestSchema, TransactionResponseSchema,
@@ -11,6 +13,7 @@ bp = Blueprint("transaction", __name__, url_prefix="/transactions")
 # Khởi tạo service
 transaction_service = TransactionService(TransactionRepository())
 escrow_service = EscrowService(EscrowRepository())
+order_service = OrderService(OrderRepository())
 
 
 @bp.route("/create", methods=["POST"])
@@ -74,9 +77,8 @@ def create_escrow():
 
     escrow = escrow_service.create_escrow(
         transaction_id=data["transaction_id"],
-        amount=data["amount"],
+        amount=data.get("amount"),
         seller_id=data["seller_id"],
-        buyer_id=data["buyer_id"]
     )
 
     response_schema = EscrowResponseSchema()
@@ -84,18 +86,41 @@ def create_escrow():
 
 @bp.route("/escrow/transactions/create", methods=["POST"])
 def create_escrowTransaction():
-    data = request.get_json()
-    schema = EscrowRequestSchema()
-    errors = schema.validate(data)
-    if errors:
-        return jsonify(errors), 400
+    data = request.get_json() or {}
+    transaction_id = data.get("transaction_id")
+    if not transaction_id:
+        return jsonify({"error": "transaction_id is required"}), 400
 
     escrow = escrow_service.create_TransactionEscrow(
-        transaction_id=data.get("transaction_id")
+        transaction_id=transaction_id
     )
 
     response_schema = EscrowResponseSchema(many=True)
     return jsonify(response_schema.dump(escrow)), 201
+
+@bp.route("/checkout", methods=["POST"])
+def checkout():
+    data = request.get_json() or {}
+    order_id = data.get("order_id")
+    if not order_id:
+        return jsonify({"error": "order_id is required"}), 400
+
+    order = order_service.get_by_id(order_id)
+    if not order:
+        return jsonify({"error": "Order not found"}), 404
+
+    tx = transaction_service.create_transaction(order_id=order_id)
+    if not tx:
+        return jsonify({"error": "Cannot create transaction for this order"}), 400
+
+    escrows = escrow_service.create_TransactionEscrow(transaction_id=tx.id)
+
+    tx_schema = TransactionResponseSchema()
+    escrow_schema = EscrowResponseSchema(many=True)
+    return jsonify({
+        "transaction": tx_schema.dump(tx),
+        "escrows": escrow_schema.dump(escrows)
+    }), 201
 
 @bp.route("/escrow/release/<int:escrow_id>", methods=["PUT"])
 def release_escrow(escrow_id):

@@ -311,24 +311,10 @@ const WatchCard = ({ watch, onPurchase }) => {
 
       const orderResponse = await orderAPI.create(orderData);
 
-      // Create transaction
-      const transactionData = {
-        order_id: orderResponse.data.id
-      };
+      // Checkout: backend will create transaction and escrows per seller
+      await transactionAPI.checkout(orderResponse.data.id);
 
-      const transactionResponse = await transactionAPI.create(transactionData);
-
-      // Create escrow
-      const escrowData = {
-        transaction_id: transactionResponse.data.id,
-        amount: watch.price,
-        seller_id: watch.seller_id,
-        buyer_id: user.id
-      };
-
-      await transactionAPI.createEscrow(escrowData);
-
-      toast.success('Purchase initiated successfully! Your payment is secured in escrow.');
+      toast.success('Purchase initiated! Funds held in escrow until delivery.');
       setShowPurchaseModal(false);
       onPurchase();
       

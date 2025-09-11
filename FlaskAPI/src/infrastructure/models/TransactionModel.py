@@ -15,7 +15,7 @@ class TransactionModel(BASE):
     status = Column(String(50), nullable=False, default="pending")
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    escrow = relationship("EscrowModel", back_populates="transaction", uselist=False)
+    escrow = relationship("EscrowModel", back_populates="transaction", uselist=True)
 
 # each buyer has 1 transaction, when initializing a new transaction due to mutiple escrows for each of sellers
 class EscrowModel(BASE):

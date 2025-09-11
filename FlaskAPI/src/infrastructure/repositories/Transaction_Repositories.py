@@ -109,16 +109,34 @@ class EscrowRepository:
             self.session.refresh(escrow)
         return escrow
     
-    def create_EscrowTransaction(self,transaction_id:int)->list[EscrowModel]:
-        transaction = self.session.query(TransactionModel).filter_by(id = transaction_id).first()
-        details = self.session.query(OrderDetailModel).filter_by(order_id = transaction.order_id).all()
-        for detail in details:
-            watch = self.session.query(WatchModel).filter_by(id = detail.watch_id).first()
-            self.create_escrow(seller_id=watch.seller_id,
-                               transaction_id=transaction.id,
-                               amount=watch.price,
+    def create_EscrowTransaction(self, transaction_id: int) -> list[EscrowModel]:
+        transaction = self.session.query(TransactionModel).filter_by(id=transaction_id).first()
+        if not transaction:
+            return []
 
-                               )
+        details = (
+            self.session.query(OrderDetailModel)
+            .filter_by(order_id=transaction.order_id)
+            .all()
+        )
+        if not details:
+            return []
+
+        # Aggregate amount per seller: sum(quantity * price)
+        seller_amounts: dict[int, float] = {}
+        for detail in details:
+            watch = self.session.query(WatchModel).filter_by(id=detail.watch_id).first()
+            if not watch:
+                continue
+            amount = float(watch.price) * (detail.quantity or 1)
+            seller_amounts[watch.seller_id] = seller_amounts.get(watch.seller_id, 0.0) + amount
+
+        for seller_id, amount in seller_amounts.items():
+            self.create_escrow(
+                seller_id=seller_id,
+                transaction_id=transaction.id,
+                amount=amount,
+            )
 
         return self.get_transaction(transaction_id=transaction.id)
     

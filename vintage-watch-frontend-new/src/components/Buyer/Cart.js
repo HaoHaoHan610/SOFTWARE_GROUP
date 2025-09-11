@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useAuth } from '../../context/AuthContext';
-import { orderAPI, transactionAPI } from '../../services/api';
+import { orderAPI, orderDetailAPI, transactionAPI } from '../../services/api';
 import { toast } from 'react-toastify';
 
 const Container = styled.div`
@@ -87,33 +87,30 @@ const Cart = () => {
   const checkoutAll = async () => {
     if (!items.length) return;
     try {
-      // Create one order per seller to simplify settlement
-      const groups = items.reduce((map, i) => {
-        const key = i.seller_id || 'unknown';
-        map[key] = map[key] || [];
-        map[key].push(i);
-        return map;
-      }, {});
+      const amount = items.reduce((s, i) => s + (i.price * (i.qty || 1)), 0);
 
-      for (const sellerId of Object.keys(groups)) {
-        const group = groups[sellerId];
-        const amount = group.reduce((s, i) => s + (i.price * (i.qty || 1)), 0);
+      // 1) Create single order for buyer
+      const orderRes = await orderAPI.create({
+        customer_id: user.id,
+        address: 'Cart checkout',
+        amount,
+        status: 'pending'
+      });
+      const orderId = orderRes.data?.id;
+      if (!orderId) throw new Error('Order creation failed');
 
-        const order = await orderAPI.create({
-          customer_id: user.id,
-          address: 'Cart checkout',
-          amount,
-          status: 'pending'
-        });
-
-        const tx = await transactionAPI.create({ order_id: order.data.id });
-        await transactionAPI.createEscrow({
-          transaction_id: tx.data.id,
-          amount,
-          seller_id: Number(sellerId) || 0,
-          buyer_id: user.id
+      // 2) Add order details for each cart item
+      for (const i of items) {
+        await orderDetailAPI.create({
+          order_id: orderId,
+          watch_id: i.id,
+          quantity: i.qty || 1
         });
       }
+
+      // 3) Create transaction + escrows (grouped per seller on backend)
+      const checkoutRes = await transactionAPI.checkout(orderId);
+      if (!checkoutRes?.data?.transaction) throw new Error('Checkout failed');
 
       toast.success('Checkout created. Escrow secured.');
       clearCart();

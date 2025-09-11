@@ -102,6 +102,7 @@ export const transactionAPI = {
   releaseEscrowByTransaction: (transactionId) => api.put(`/transactions/escrow/bytransaction/release/${transactionId}`),
   updateEscrowStatus: (payload) => api.put('/transactions/escrow/status', payload),
   update: (id, transactionData) => api.put(`/transactions/${id}`, transactionData),
+  checkout: (orderId) => api.post('/transactions/checkout', { order_id: orderId }),
 };
 
 // Feedback API

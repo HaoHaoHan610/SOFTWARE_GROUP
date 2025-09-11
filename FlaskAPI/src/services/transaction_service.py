@@ -30,9 +30,9 @@ class EscrowService:
         self.details = OrderDetail_Repository
         self.watchs = WatchRepository
 
-    def create_escrow(self, transaction_id: int, amount: float,buyer_id:int,seller_id:int
-                      ) -> EscrowModel:
-        return self.escrow_repo.create_escrow(transaction_id, amount,buyer_id=buyer_id,seller_id=seller_id)
+    def create_escrow(self, transaction_id: int, amount: float | None, seller_id: int) -> EscrowModel:
+        amount_value = amount if amount is not None else 0.0
+        return self.escrow_repo.create_escrow(seller_id=seller_id, transaction_id=transaction_id, amount=amount_value)
 
     def release_escrow(self, escrow_id: int) -> Optional[EscrowModel]:
         return self.escrow_repo.release_escrow(escrow_id)
@@ -43,7 +43,7 @@ class EscrowService:
             self.escrow_repo.update_escrow(id=tran.id,status=status)
         return transactions
 
-    def create_TransactionEscrow(self,transaction_id:int)->list[EscrowModel]:
+    def create_TransactionEscrow(self, transaction_id: int) -> list[EscrowModel]:
         return self.escrow_repo.create_EscrowTransaction(transaction_id=transaction_id)
 
     def release_AllTransactions(self,transaction_id:int)->list[EscrowModel]:
