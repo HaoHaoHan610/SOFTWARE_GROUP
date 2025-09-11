@@ -3,7 +3,7 @@ from marshmallow import Schema, fields
 class OrderDetailRequestSchema(Schema):
     order_id = fields.Int(required=True)
     watch_id = fields.Int(required=True)
-    quantity = fields.Int(required=False, missing=1)
+    quantity = fields.Int(required=False)
 
 class OrderDetailResponseSchema(Schema):
     # id = fields.Int(required=True)
