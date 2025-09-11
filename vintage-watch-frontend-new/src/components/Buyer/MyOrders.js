@@ -77,7 +77,11 @@ const MyOrders = () => {
                 <div style={{ color: '#0f172a', fontWeight: 700 }}>Amount: ${Number(order.amount || 0).toLocaleString()}</div>
               </div>
               <div>
-                <Btn onClick={() => confirmReceived(order)}>Confirm Received</Btn>
+                {String(order.status).toLowerCase() !== 'completed' ? (
+                  <Btn onClick={() => confirmReceived(order)}>Confirm Received</Btn>
+                ) : (
+                  <span style={{ color: '#16a34a', fontWeight: 700 }}>Received</span>
+                )}
               </div>
             </Header>
             <div style={{ color: '#334155' }}>Address: {order.address}</div>
