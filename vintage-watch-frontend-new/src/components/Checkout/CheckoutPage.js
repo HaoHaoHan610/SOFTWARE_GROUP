@@ -62,28 +62,12 @@ const CheckoutPage = () => {
 
     return (
         <Wrapper>
-            <Card title="Checkout">
-                <Row>
-                    <div>
-                        <div style={{ color: '#64748b', marginBottom: 8 }}>Watch ID</div>
-                        <div style={{ fontWeight: 800 }}>{init.watch_id || '-'}</div>
-                    </div>
-                    <div>
-                        <div style={{ color: '#64748b', marginBottom: 8 }}>Amount</div>
-                        <div style={{ fontWeight: 800 }}>{init.amount ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(init.amount) : '-'}</div>
-                    </div>
-                </Row>
+            <Card title="Checkout Disabled">
+                <div style={{ color: '#334155' }}>
+                    Vui lòng thanh toán qua giỏ hàng. Tính năng checkout đơn lẻ đã được tắt.
+                </div>
                 <div style={{ height: 16 }} />
-                <Select label="Payment Method" value={method} onChange={(e) => setMethod(e.target.value)}>
-                    <option value="VNPAY">VNPay</option>
-                    <option value="MOMO">MoMo</option>
-                    <option value="PAYPAL">PayPal</option>
-                    <option value="CARD">Credit/Debit Card</option>
-                </Select>
-                <div style={{ height: 16 }} />
-                <Button onClick={handlePay} disabled={loading}>
-                    {loading ? 'Processing...' : 'Pay Now'}
-                </Button>
+                <Button onClick={() => navigate('/cart')}>Go to Cart</Button>
             </Card>
         </Wrapper>
     );

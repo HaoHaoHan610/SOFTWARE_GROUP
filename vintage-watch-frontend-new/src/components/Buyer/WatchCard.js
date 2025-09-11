@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { watchAPI, orderAPI, transactionAPI, appraisalAPI } from '../../services/api';
+import { appraisalAPI } from '../../services/api';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 
@@ -136,14 +136,7 @@ const ViewButton = styled(Button)`
   }
 `;
 
-const PurchaseButton = styled(Button)`
-  background-color: #27ae60;
-  color: white;
-  
-  &:hover {
-    background-color: #229954;
-  }
-`;
+// Purchase button removed; checkout is only via Cart
 
 const AddBtn = styled(Button)`
   flex: 0 0 auto;
@@ -158,128 +151,13 @@ const AddBtn = styled(Button)`
   &:hover { background-color: #7d3c98; }
 `;
 
-const Modal = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 2rem;
-`;
-
-const ModalContent = styled.div`
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
-  max-width: 500px;
-  width: 100%;
-  max-height: 90vh;
-  overflow-y: auto;
-`;
-
-const ModalHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-`;
-
-const ModalTitle = styled.h2`
-  color: #2c3e50;
-  margin: 0;
-`;
-
-const CloseButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #7f8c8d;
-  
-  &:hover {
-    color: #2c3e50;
-  }
-`;
-
-const PurchaseForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
-
-const FormGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-`;
-
-const Label = styled.label`
-  font-weight: 500;
-  color: #2c3e50;
-`;
-
-const Input = styled.input`
-  padding: 10px;
-  border: 2px solid #e1e8ed;
-  border-radius: 6px;
-  font-size: 14px;
-  
-  &:focus {
-    outline: none;
-    border-color: #3498db;
-  }
-`;
-
-const TextArea = styled.textarea`
-  padding: 10px;
-  border: 2px solid #e1e8ed;
-  border-radius: 6px;
-  font-size: 14px;
-  resize: vertical;
-  min-height: 80px;
-  
-  &:focus {
-    outline: none;
-    border-color: #3498db;
-  }
-`;
-
-const SubmitButton = styled.button`
-  background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-  
-  &:hover {
-    transform: translateY(-2px);
-  }
-  
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-  }
-`;
+// Modal and purchase form removed; only add-to-cart remains
 
 const WatchCard = ({ watch, onPurchase }) => {
   const { user } = useAuth();
-  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [appraisal, setAppraisal] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [purchaseLoading, setPurchaseLoading] = useState(false);
-  const [purchaseData, setPurchaseData] = useState({
-    shipping_address: '',
-    notes: ''
-  });
+  
 
   React.useEffect(() => {
     fetchAppraisal();
@@ -296,35 +174,7 @@ const WatchCard = ({ watch, onPurchase }) => {
     }
   };
 
-  const handlePurchase = async (e) => {
-    e.preventDefault();
-    setPurchaseLoading(true);
-
-    try {
-      // Create order: map to backend schema
-      const orderData = {
-        customer_id: user.id,
-        address: purchaseData.shipping_address,
-        amount: watch.price,
-        status: 'pending'
-      };
-
-      const orderResponse = await orderAPI.create(orderData);
-
-      // Checkout: backend will create transaction and escrows per seller
-      await transactionAPI.checkout(orderResponse.data.id);
-
-      toast.success('Purchase initiated! Funds held in escrow until delivery.');
-      setShowPurchaseModal(false);
-      onPurchase();
-      
-    } catch (error) {
-      console.error('Error processing purchase:', error);
-      toast.error('Failed to process purchase. Please try again.');
-    } finally {
-      setPurchaseLoading(false);
-    }
-  };
+  // Direct purchase disabled; payments only via Cart
 
   const handleAddToCart = () => {
     if (!watch.existing_status) {
@@ -414,89 +264,11 @@ const WatchCard = ({ watch, onPurchase }) => {
               View Details
             </ViewButton>
             <AddBtn title="Add to cart" onClick={handleAddToCart} disabled={!watch.existing_status}>+</AddBtn>
-            <PurchaseButton 
-              onClick={() => setShowPurchaseModal(true)}
-              disabled={!watch.existing_status || !user}
-            >
-              {!user ? 'Login to Buy' : (watch.existing_status ? 'Purchase' : 'Sold')}
-            </PurchaseButton>
           </ButtonGroup>
         </Content>
       </Card>
 
-      {showPurchaseModal && (
-        <Modal>
-          <ModalContent>
-            <ModalHeader>
-              <ModalTitle>Purchase {watch.name}</ModalTitle>
-              <CloseButton onClick={() => setShowPurchaseModal(false)}>
-                ×
-              </CloseButton>
-            </ModalHeader>
-
-            <div style={{ marginBottom: '1.5rem' }}>
-              <h3 style={{ color: '#2c3e50', marginBottom: '0.5rem' }}>
-                {watch.brand} {watch.name}
-              </h3>
-              <p style={{ fontSize: '1.2rem', fontWeight: '600', color: '#27ae60' }}>
-                {formatPrice(watch.price)}
-              </p>
-            </div>
-
-            {appraisal && (
-              <div style={{ 
-                backgroundColor: '#f8f9fa', 
-                padding: '1rem', 
-                borderRadius: '8px',
-                marginBottom: '1.5rem',
-                borderLeft: '4px solid #3498db'
-              }}>
-                <h4 style={{ color: '#2c3e50', margin: '0 0 0.5rem 0' }}>
-                  Professional Appraisal
-                </h4>
-                <p style={{ margin: '0', fontSize: '0.9rem', color: '#7f8c8d' }}>
-                  This watch has been professionally appraised and authenticated.
-                </p>
-              </div>
-            )}
-
-            <PurchaseForm onSubmit={handlePurchase}>
-              <FormGroup>
-                <Label htmlFor="shipping_address">Shipping Address *</Label>
-                <TextArea
-                  id="shipping_address"
-                  name="shipping_address"
-                  value={purchaseData.shipping_address}
-                  onChange={(e) => setPurchaseData({
-                    ...purchaseData,
-                    shipping_address: e.target.value
-                  })}
-                  required
-                  placeholder="Enter your complete shipping address..."
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <Label htmlFor="notes">Additional Notes</Label>
-                <TextArea
-                  id="notes"
-                  name="notes"
-                  value={purchaseData.notes}
-                  onChange={(e) => setPurchaseData({
-                    ...purchaseData,
-                    notes: e.target.value
-                  })}
-                  placeholder="Any special instructions or notes..."
-                />
-              </FormGroup>
-
-              <SubmitButton type="submit" disabled={purchaseLoading}>
-                {purchaseLoading ? 'Processing...' : 'Complete Purchase'}
-              </SubmitButton>
-            </PurchaseForm>
-          </ModalContent>
-        </Modal>
-      )}
+      {/* Direct purchase UI removed */}
     </>
   );
 };

@@ -228,7 +228,7 @@ const WatchDetails = () => {
           <Price>{formatPrice(watch.price)}</Price>
           {user && user.role === 'buyer' && (
             <div style={{ margin: '12px 0' }}>
-              <Button onClick={startPurchase} disabled={!watch || !watch.id}>Purchase</Button>
+              <Button onClick={() => window.location.href = '/cart'} disabled={!watch || !watch.id}>Go to Cart to Checkout</Button>
             </div>
           )}
 
@@ -287,24 +287,7 @@ const WatchDetails = () => {
         </div>
       </Grid>
 
-      <Modal open={openPurchase} title={`Purchase ${watch.name}`} onClose={() => setOpenPurchase(false)}>
-        <div style={{ color: '#0f172a', fontWeight: 800, marginBottom: 8 }}>{watch.brand}</div>
-        <div style={{ color: '#16a34a', fontWeight: 800, marginBottom: 16 }}>{formatPrice(watch.price)}</div>
-        <Select label="Payment Method" value={method} onChange={(e) => setMethod(e.target.value)}>
-          <option value="VNPAY">VNPay</option>
-          <option value="MOMO">MoMo</option>
-          <option value="PAYPAL">PayPal</option>
-          <option value="CARD">Credit/Debit Card</option>
-        </Select>
-        <div style={{ height: 12 }} />
-        <Input label="Shipping Address *" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="City, street, ..." />
-        <div style={{ height: 12 }} />
-        <Input label="Additional Notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Notes for seller" />
-        <div style={{ height: 16 }} />
-        <Button onClick={submitPurchase} disabled={submitting}>
-          {submitting ? 'Processing...' : 'Complete Purchase'}
-        </Button>
-      </Modal>
+      {/* Purchase modal removed: checkout only via Cart */}
     </Container>
   );
 };
