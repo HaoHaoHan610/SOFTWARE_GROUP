@@ -79,10 +79,3 @@ def delete_order(id: int):
     except Exception as e:
         return jsonify({"error": str(e)}), 400
     
-# @bp.route("/order/<int:order_id>/watch/<watch_id:int>",methods=["DELETE"])
-# def delete_order_watch(order_id:int,watch_id:int):
-#     try:
-#         detail_service.delete_order_watch(order_id=order_id,watch_id=watch_id)
-#         return jsonify({"message": f"Order {order_id}|Watch {watch_id} deleted successfully"}), 200
-#     except Exception as e:
-#         return jsonify({"error": str(e)}), 400

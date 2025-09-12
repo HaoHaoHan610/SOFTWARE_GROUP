@@ -25,7 +25,6 @@ class TransactionRepository:
 
         transaction = TransactionModel(
             buyer_id=order.customer_id,
-            # seller_id=seller_id,
             order_id=order_id,
             amount=amount,
             status="pending",

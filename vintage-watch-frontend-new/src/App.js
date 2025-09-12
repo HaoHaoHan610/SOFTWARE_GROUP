@@ -28,6 +28,8 @@ const AppContent = () => {
     return <Loading />;
   }
 
+
+  // URL of FRONT-END
   const routeConfigs = [
     { paths: ['/dashboard'], element: <Dashboard /> },
     { paths: ['/seller', '/seller/listings', '/seller/create'], element: <SellerDashboard />, roles: ['seller'] },

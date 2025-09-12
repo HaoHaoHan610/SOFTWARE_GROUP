@@ -110,9 +110,6 @@ def update_a_w(appraiser_id:int,watch_id:int):
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-# ----------------------
-# DELETE appraisal by appraiser + watch
-# ----------------------
 
 @bp.route("/<int:id>", methods=["DELETE"])
 def delete_appraisal(id:int):
@@ -129,9 +126,6 @@ def delete_appraisal_a_w(appraiser_id: int, watch_id: int):
         return jsonify({"message": "Appraisal deleted successfully"}), 200
     return jsonify({"error": "Appraisal not found"}), 404
 
-# ----------------------
-# GET all appraisals by watch
-# ----------------------
 @bp.route("/watch/<int:watch_id>", methods=["GET"])
 def get_appraisals_by_watch(watch_id: int):
     appraisals = appraisal_service.get_appraisals_by_watch_id(watch_id)

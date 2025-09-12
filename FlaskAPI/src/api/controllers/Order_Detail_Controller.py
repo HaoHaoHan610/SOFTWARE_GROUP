@@ -16,13 +16,6 @@ def get_all():
     detail = detail_service.get_all()
     return response_schema.dump(detail, many=True), 200
 
-# @bp.route("/<int:id>", methods=["GET"])
-# def get_detail(id: int):
-#     detail = detail_service.get_by_id(id)
-#     if not detail:
-#         return jsonify({"error": "Details not found"}), 404
-#     return response_schema.dump(detail), 200
-
 @bp.route("/order/<int:order_id>", methods=["GET"])
 def get_order(order_id:int):
     detail = detail_service.get_all_order(order_id=order_id)

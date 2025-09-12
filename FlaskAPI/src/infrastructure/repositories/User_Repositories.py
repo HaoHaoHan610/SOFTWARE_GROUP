@@ -47,9 +47,7 @@ class UserRepository:
                 userobj.role = user.role
             if user.created_at is not None:
                 user.address = user.created_at
-            # if user.address is not None:
-            #     userobj.address = user.address
-
+                
             self.session.commit()
             self.session.refresh(userobj)
             return userobj

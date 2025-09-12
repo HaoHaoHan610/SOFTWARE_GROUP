@@ -66,7 +66,6 @@ def update_transaction(transaction_id):
     return jsonify(response_schema.dump(updated)), 200
 
 
-# -------------------- Escrow --------------------
 @bp.route("/escrow/create", methods=["POST"])
 def create_escrow():
     data = request.get_json()

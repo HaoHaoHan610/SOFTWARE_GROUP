@@ -19,7 +19,7 @@ from api.controllers.Transaction_Controller import bp as bp_transaction
 from flask_restful import Api
 def create_app():
     app = Flask(__name__)
-    # Enable CORS for local frontend development
+    
     try:
         CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "http://127.0.0.1:3000"]}}, supports_credentials=True)
     except Exception as e:
@@ -48,4 +48,3 @@ def create_app():
 if __name__ == "__main__":
     app = create_app()
     app.run(debug=True, host='0.0.0.0', port=5000)
-    # api = Api(app)

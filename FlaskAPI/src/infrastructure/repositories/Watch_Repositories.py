@@ -16,7 +16,6 @@ class WatchRepository:
         watchobj.existing_status=watch.existing_status
         watchobj.seller_id = watch.seller_id
         watchobj.img = watch.img
-        # watchobj.appraisal_report_id = watch.appraisal_report_id
         watchobj.created_at = watch.created_at
         try:
             self.session.add(watchobj)

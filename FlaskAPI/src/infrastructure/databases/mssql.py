@@ -16,25 +16,12 @@ engine = create_engine(
     pool_size=10,                # base pool size
     max_overflow=20,             # allow burst connections
 )
-#echo gives the message on terminal for visbiable of quries
-# like station
-
-
-# with engine.connect() as conn:
-#     result = conn.execute(text("SELECT * FROM users"))
-#     for row in result:
-#         print(row)
-
 
 from sqlalchemy.orm import scoped_session
 
 SessionLocal = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
-# Export a scoped session handle (thread-safe); repositories can import `session`
+
 session = SessionLocal
-# any session functions for connecting users ,database, application
-# enable tracking the users activities and actions
-# or trasaction management
-# 
 
 def init_mssql(app):
     BASE.metadata.create_all(bind=engine)
