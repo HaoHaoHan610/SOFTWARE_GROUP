@@ -63,7 +63,7 @@ Admin --> UC6
 
 </details>
 
-![Biểu đồ tác nhân](DOC/Diagram/bieudotacnhan.png)
+![Biểu đồ tác nhân]([DOC/Diagram/bieudotacnhan.png](https://github.com/HaoHaoHan610/SOFTWARE_GROUP/blob/main/DOC/Diagram/BIEUDOTACNHAN.png?raw=true))
 
 ## Các chức năng chính
 
