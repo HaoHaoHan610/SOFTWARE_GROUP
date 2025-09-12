@@ -840,3 +840,45 @@ Buyer <-- PaymentManagement: Nhận tiền sau Escrow Released
 
 * ***Quản lý mã nguồn:*** Sử dụng Git để quản lý mã nguồn và GitHub để lưu trữ ma nguồn.
 
+## V. Yêu cầu thiết kế
+
+### Mô hình kiến trúc
+
+<details>
+
+<summary>Code PlantUML</summary
+
+@startuml "Mô hình kiến trúc"
+package "Client" {
+  [ReactJS]
+}
+
+package "Server" {
+  [Controller]
+  [Service]
+  [Repository]
+}
+
+database "Database" as DB
+
+[ReactJS] ..> [Controller] : REST API
+[Controller] --> [Service]
+[Service] --> [Repository]
+[Repository] --> DB
+@enduml
+
+</details>
+
+Mô hình kiến trúc của hệ thống sẽ bao gồm các thành phần sau:
+
+* ***Client:*** Giao diện người dùng, xây dựng bằng ReactJS, kết nối với API để lấy dữ liệu.
+
+* ***Server:*** Dịch vụ API, xây dựng bằng ASP Net Web API  Web API, sử dụng kiến trúc 3 lớp để xử lý    logic.
+
+    * ***Presentation:*** Xử lý các yêu cầu từ client, gọi các phương thức từ lớp Service.
+
+    * ***Business Logic:*** Chứa logic xử lý chính của ứng dụng, gọi các phương thức từ lớp Repository.
+
+    * ***Data Access:*** Tương tác với cơ sở dữ liệu, thực hiện các thao tác CRUD.
+
+* ***Database:*** Cơ sở dữ liệu MS SQL Server, lưu trữ thông tin người dùng, lịch hẹn, dịch vụ...
