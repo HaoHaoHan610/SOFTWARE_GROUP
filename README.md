@@ -225,6 +225,8 @@ UC8 --> UC9 : <<include>>
 
 </details>
 
+![Biểu đồ tác nhân](DOC/Diagram/bieudousecaseseller.png)
+
 #### Chức năng buyers
 
 <details>
