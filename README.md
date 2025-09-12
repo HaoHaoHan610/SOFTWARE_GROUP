@@ -181,6 +181,8 @@ UC_Report ..> UC_Transactions : <<extend>>
 
 </details>
 
+![Biểu đồ tác nhân](DOC/Diagram/bieudousecasetongquan.png)
+
 ### Biểu đồ Use Case chi tiết
 
 #### Chức năng Seller
