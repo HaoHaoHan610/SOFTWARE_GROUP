@@ -63,6 +63,7 @@ Admin --> UC6
 
 </details>
 
+![Biểu đồ tác nhân.svg](DOC/Diagram/BIỂU%20ĐỒ%20TÁC%20NHÂN.png)
 
 ## Các chức năng chính
 
