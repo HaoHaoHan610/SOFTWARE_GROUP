@@ -882,3 +882,133 @@ Mô hình kiến trúc của hệ thống sẽ bao gồm các thành phần sau:
     * ***Data Access:*** Tương tác với cơ sở dữ liệu, thực hiện các thao tác CRUD.
 
 * ***Database:*** Cơ sở dữ liệu MS SQL Server, lưu trữ thông tin người dùng, lịch hẹn, dịch vụ...
+
+
+### Mô hình cơ sở dữ liệu:
+
+Cơ sở dữ liệu sẽ bao gồm các bảng sau:
+
+<details>
+
+<summary>Code PlantUML</summary
+
+@startuml "Mô hình cơ sở dữ liệu"
+
+class User {
+  +id : int
+  +username : string
+  +email : string
+  +password : string
+  +created_at : datetime
+  +role : string
+}
+
+class Transaction {
+  +id : int
+  +buyer_id : int
+  +order_id : int
+  +amount : float
+  +status : string
+  +created_at : datetime
+}
+
+class Escrow {
+  +id : int
+  +transaction_id : int
+  +amount : float
+  +status : string
+  +created_at : datetime
+  +released_at : datetime
+}
+
+class Order {
+  +id : int
+  +customer_id : int
+  +status : string
+  +created_at : datetime
+  +updated_at : datetime
+  +quantity : int
+  +address : int
+  +amount : float
+}
+
+class OrderDetail {
+  +order_id : int
+  +watch_id : int
+  +quantity : int
+}
+
+class Watch {
+  +id : int
+  +brand : string
+  +name : string
+  +price : float
+  +created_at : datetime
+  +existing_status : boolean
+  +img : string
+  +seller_id : int
+}
+
+class Appraisal {
+  +id : int
+  +appraiser_id : int
+  +watch_id : int
+  +es_value : float
+  +auth : boolean
+  +con_note : string
+  +updated_at : datetime
+  +status : string
+  +created_at : datetime
+}
+
+class Feedback {
+  +id : int
+  +sender_id : int
+  +receiver_id : int
+  +content : string
+  +created_at : datetime
+}
+
+' Relationships
+User "1" -- "0.." Transaction : buyer_id
+User "1" -- "0.." Feedback : sender_id
+User "1" -- "0.." Feedback : receiver_id
+User "1" -- "0.." Watch : seller_id
+
+Transaction "1" -- "1" Escrow
+Transaction "1" -- "1" Order
+
+Order "1" -- "0.." OrderDetail
+Watch "1" -- "0.." OrderDetail
+Watch "1" -- "0..*" Appraisal
+Appraisal "1" -- "1" User : appraiser_id
+
+@enduml
+
+</details>
+
+* ***Users:*** Lưu thông tin người dùng, bao gồm tên, email, mật khẩu, quyền...
+
+* ***Watch:*** id,tên thương hiệu,tên sản phẩm,giá tiền, ngày đăng…
+
+* ***Appraisal:*** tên,ảnh đại diện,độ uy tín,kinh nghiệm….
+
+* ***Order:*** tên sản phẩm,id sản phẩm ,địa chỉ giao ,địa chỉ nhận hàng ,ngày giao nhận,thanh toán bằng …
+
+* ***Escrow:*** id sản phẩm ,giá tiền,số lượng,seller id …
+
+#### Giao diện người dùng
+
+Giao diện người dùng sẽ bao gồm các trang sau:
+
+* ***Trang chủ:*** Hiển thị thông tin sản phẩm , các công cụ tim kiếm , sản phẩm  nổi bật.
+
+* ***Trang seller:*** Hiển thị thông tin người bán, cho phép tìm kiếm và xem chi tiết ,thẩm định sản phẩm.
+
+* ***Trang cá nhân:*** Hiển thị thông tin cá nhân, cho phép cập nhật thông tin, đổi mật khẩu, quản lý giỏ hàng.
+
+* ***Trang Appaiser:*** Hiển thị thông tin sản phẩm,hiển thị độ uy tín của nhà thẩm định,cho phép đưa thẩm định cho sản phẩm.
+
+* ***Trang Admin:*** Hiển thị thông tin người dùng trang,cho phép truy cập vào thông tin cá nhân của người mua và bán,giải quyết tranh chấp giữa người mua và bán.
+
+* ***Trang Customer Support Agent:*** Hiển thị thông tin người mua, hỗ trợ người mua sản phẩm,hỗ trợ hoàn trả và thanh toán sản phẩm.
