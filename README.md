@@ -832,74 +832,6 @@ Cancelled --> []
 
 ![Biểu đồ tác nhân](DOC/Diagram/cactrangthaithuctehethong.png)
 
-## I. Tổng quan dự án
-
-###  Yêu cầu phi chức năng
-
-#### 1. Hiệu suất
-
-- Thời gian tải trang không quá 3 giây
-
-- Thời gian phản hồi API không quá 1 giây
-
-- Hỗ trợ đồng thời ít nhất 30 người dùng
-
-- Tối ưu hóa hình ảnh và tài nguyên
-
-#### 2. Bảo mật
-
-- Mã hóa dữ liệu nhạy cảm trong cơ sở dữ liệu
-
-- Bảo vệ chống tấn công SQL Injection
-
-- Logging đầy đủ các hoạt động quan trọng
-
-- Backup dữ liệu định kỳ
-
-#### 3. Khả năng mở rộng
-
-- Kiến trúc module hóa, dễ thêm tính năng mới
-
-- Khả năng tích hợp với các hệ thống bên thứ ba
-
-- Dễ dàng nâng cấp phiên bản
-
-- Documentation đầy đủ cho developers
-
-#### 4. Giao diện người dùng
-
-- Thiết kế phù hợp cho mọi kích thước màn hình
-
-- Thời gian học sử dụng không quá 30 phút
-
-- Giao diện nhất quán trên toàn bộ hệ thống
-
-#### 5. Tương thích
-
-- Hoạt động trên các trình duyệt phổ biến (Chrome, Firefox, Safari, Edge)
-
-- Hỗ trợ các phiên bản trình duyệt từ 2 năm trở lại
-
-- Tối ưu cho kết nối mạng chậm
-
-#### 6. Độ tin cậy
-
-- Uptime tối thiểu 99.9%
-
-- Thời gian phục hồi sau sự cố < 4 giờ
-
-- Backup dữ liệu hàng ngày
-
-- Có phương án dự phòng khi hệ thống gặp sự cố
-
-#### 7. Khả năng bảo trì
-
-- Code được viết theo chuẩn clean code
-
-- Tài liệu kỹ thuật chi tiết
-
-- Dễ dàng rollback khi cần thiết
-
 ## IV. Công nghệ:
 
 * ***Frontend***: Sử dụng ReactJS để xây dựng giao diện người dùng.
@@ -918,6 +850,21 @@ Cancelled --> []
 
 ### Mô hình kiến trúc
 
+Mô hình kiến trúc của hệ thống sẽ bao gồm các thành phần sau:
+
+* ***Client:*** Giao diện người dùng, xây dựng bằng ReactJS, kết nối với API để lấy dữ liệu.
+
+* ***Server:*** Dịch vụ API, xây dựng bằng ASP Net Web API  Web API, sử dụng kiến trúc 3 lớp để xử lý    logic.
+
+    * ***Presentation:*** Xử lý các yêu cầu từ client, gọi các phương thức từ lớp Service.
+
+    * ***Business Logic:*** Chứa logic xử lý chính của ứng dụng, gọi các phương thức từ lớp Repository.
+
+    * ***Data Access:*** Tương tác với cơ sở dữ liệu, thực hiện các thao tác CRUD.
+
+* ***Database:*** Cơ sở dữ liệu MS SQL Server, lưu trữ thông tin người dùng, lịch hẹn, dịch vụ...
+
+![Biểu đồ tác nhân](DOC/Diagram/database.png)
 <details>
 
 <summary>Code PlantUML</summary
@@ -942,24 +889,6 @@ database "Database" as DB
 @enduml
 
 </details>
-
-
-
-Mô hình kiến trúc của hệ thống sẽ bao gồm các thành phần sau:
-
-* ***Client:*** Giao diện người dùng, xây dựng bằng ReactJS, kết nối với API để lấy dữ liệu.
-
-* ***Server:*** Dịch vụ API, xây dựng bằng ASP Net Web API  Web API, sử dụng kiến trúc 3 lớp để xử lý    logic.
-
-    * ***Presentation:*** Xử lý các yêu cầu từ client, gọi các phương thức từ lớp Service.
-
-    * ***Business Logic:*** Chứa logic xử lý chính của ứng dụng, gọi các phương thức từ lớp Repository.
-
-    * ***Data Access:*** Tương tác với cơ sở dữ liệu, thực hiện các thao tác CRUD.
-
-* ***Database:*** Cơ sở dữ liệu MS SQL Server, lưu trữ thông tin người dùng, lịch hẹn, dịch vụ...
-
-![Biểu đồ tác nhân](DOC/Diagram/database.png)
 
 ### Mô hình cơ sở dữ liệu:
 
