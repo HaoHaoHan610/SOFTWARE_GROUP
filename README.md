@@ -66,59 +66,59 @@ Admin --> UC6
 
 ## Các chức năng chính
 
-### Sellers:
+***Sellers:***
 
-Đăng sản phẩm: Cho phép người bán thêm thông tin sản phẩm gồm hình ảnh, mô tả, năm sản xuất, hãng, tình trạng, giá.
+- Đăng sản phẩm: Cho phép người bán thêm thông tin sản phẩm gồm hình ảnh, mô tả, năm sản xuất, hãng, tình trạng, giá.
 
-Gửi thẩm định: Gửi yêu cầu đến chuyên gia để xác thực đồng hồ.
+- Gửi thẩm định: Gửi yêu cầu đến chuyên gia để xác thực đồng hồ.
 
-Chỉnh sửa sản phẩm: Cập nhật thông tin hoặc giá bán dựa trên báo cáo thẩm định.
+- Chỉnh sửa sản phẩm: Cập nhật thông tin hoặc giá bán dựa trên báo cáo thẩm định.
 
-Quản lý sản phẩm: Xem, sửa, hoặc xóa sản phẩm đã đăng.
+- Quản lý sản phẩm: Xem, sửa, hoặc xóa sản phẩm đã đăng.
 
-Xem trạng thái giao dịch: Theo dõi tình hình đơn hàng và phản hồi của người mua.
+- Xem trạng thái giao dịch: Theo dõi tình hình đơn hàng và phản hồi của người mua.
 
-### Buyer:
+***Buyer:***
 
-Tìm kiếm sản phẩm: Lọc theo hãng, giá, tình trạng, năm sản xuất.
+- Tìm kiếm sản phẩm: Lọc theo hãng, giá, tình trạng, năm sản xuất.
 
-Xem chi tiết sản phẩm: Hiển thị mô tả, hình ảnh, thông tin người bán.
+- Xem chi tiết sản phẩm: Hiển thị mô tả, hình ảnh, thông tin người bán.
 
-Xem báo cáo thẩm định: Kiểm tra tính xác thực và giá trị đồng hồ trước khi mua.
+- Xem báo cáo thẩm định: Kiểm tra tính xác thực và giá trị đồng hồ trước khi mua.
 
-Mua sản phẩm: Thực hiện thanh toán qua hệ thống.
+- Mua sản phẩm: Thực hiện thanh toán qua hệ thống.
 
-Xác nhận giao hàng: Hoàn tất giao dịch sau khi nhận hàng.
+- Xác nhận giao hàng: Hoàn tất giao dịch sau khi nhận hàng.
 
-Đánh giá: Đưa ra nhận xét về sản phẩm và người bán.
+- Đánh giá: Đưa ra nhận xét về sản phẩm và người bán.
 
-### Appraisers:
+***Appraisers:***
 
-Xem yêu cầu thẩm định: Truy cập danh sách sản phẩm cần kiểm định.
+- Xem yêu cầu thẩm định: Truy cập danh sách sản phẩm cần kiểm định.
 
-Đánh giá sản phẩm: Kiểm tra độ nguyên bản, tình trạng, độ hiếm, lịch sử sản phẩm.
+- Đánh giá sản phẩm: Kiểm tra độ nguyên bản, tình trạng, độ hiếm, lịch sử sản phẩm.
 
-Tạo báo cáo: Gửi báo cáo thẩm định gồm tính xác thực, giá trị thị trường, đề xuất giá.
+- Tạo báo cáo: Gửi báo cáo thẩm định gồm tính xác thực, giá trị thị trường, đề xuất giá.
 
-### Admin:
+*** Admin: ***
 
-Quản lý tài khoản: Phê duyệt chuyên gia, quản lý người bán và người mua.
+- Quản lý tài khoản: Phê duyệt chuyên gia, quản lý người bán và người mua.
 
-Quản lý sản phẩm: Kiểm tra, tạm khóa hoặc gỡ sản phẩm khi phát hiện bất thường.
+- Quản lý sản phẩm: Kiểm tra, tạm khóa hoặc gỡ sản phẩm khi phát hiện bất thường.
 
-Xử lý tranh chấp: Giải quyết khi có vấn đề giữa người mua và người bán.
+- Xử lý tranh chấp: Giải quyết khi có vấn đề giữa người mua và người bán.
 
-Quản lý hệ thống: Kiểm tra nhật ký, cập nhật phần mềm, đảm bảo an toàn dữ liệu.
+- Quản lý hệ thống: Kiểm tra nhật ký, cập nhật phần mềm, đảm bảo an toàn dữ liệu.
 
-### Customer Support Agents:
+*** Customer Support Agents: ***
 
-Tiếp nhận yêu cầu: Nhận thắc mắc và sự cố từ người dùng.
+- Tiếp nhận yêu cầu: Nhận thắc mắc và sự cố từ người dùng.
 
-Hỗ trợ trực tiếp: Trả lời câu hỏi, hướng dẫn sử dụng hệ thống.
+- Hỗ trợ trực tiếp: Trả lời câu hỏi, hướng dẫn sử dụng hệ thống.
 
-Chuyển tiếp sự cố: Gửi cho bộ phận liên quan khi cần xử lý kỹ thuật.
+- Chuyển tiếp sự cố: Gửi cho bộ phận liên quan khi cần xử lý kỹ thuật.
 
-Ghi nhận phản hồi: Thu thập ý kiến cải tiến dịch vụ
+- Ghi nhận phản hồi: Thu thập ý kiến cải tiến dịch vụ
 
 ## Biểu đồ Use Case
 
@@ -149,7 +149,7 @@ rectangle "Vintage Timepiece Evaluation and Trading Platform" {
   usecase "User management" as UC_UserMgmt
   usecase "Maintain System Security" as UC_Security
   usecase "Update Platform" as UC_Update
-}
+}- 
 
 ' --- Associations ---
 Buyers --> UC_Browse
@@ -180,9 +180,9 @@ UC_Report ..> UC_Transactions : <<extend>>
 
 </details>
 
-# Biểu đồ Use Case chi tiết
+### Biểu đồ Use Case chi tiết
 
-## Chức năng Seller
+#### Chức năng Seller
 
 <details>
 
@@ -221,3 +221,625 @@ UC8 --> UC9 : <<include>>
 @enduml
 
 </details>
+
+#### Chức năng buyers
+
+<details>
+
+<summary>Code PlantUML</summary
+
+@startuml "Biểu đồ Use Case chức năng Buyer"
+left to right direction
+
+actor Buyers
+
+rectangle System {
+  usecase "Report Management" as UC1
+  usecase "Transactions" as UC2
+  usecase "Escrow" as UC3
+  usecase "List Items" as UC4
+  usecase "Appraisal" as UC5
+  usecase "Browse Listings" as UC6
+  usecase "Log in" as UC7
+  usecase "User management" as UC8
+}
+
+Buyers --> UC1
+Buyers --> UC2
+Buyers --> UC4
+Buyers --> UC7
+
+UC2 --> UC3 : <<include>>
+UC2 --> UC5 : <<extend>>
+UC4 --> UC6 : <<extend>>
+UC7 --> UC8 : <<include>>
+
+</details>
+
+#### Chức năng Customer supports Agent
+
+<details>
+
+<summary>Code PlantUML</summary
+
+@startuml "Biểu đồ Use Case chức năng Customer Support Agent"
+left to right direction
+
+actor "Customer Support Agent" as CSA
+
+rectangle System {
+  usecase "Report Management" as UC1
+  usecase "Log in" as UC2
+  usecase "User management" as UC3
+  usecase "Resolve Queries" as UC4
+}
+
+CSA --> UC1
+CSA --> UC2
+CSA --> UC4
+
+UC2 --> UC3 : <<include>>
+
+@enduml
+
+</details>
+
+#### Chức năng Administrator
+
+<details>
+
+<summary>Code PlantUML</summary
+
+@startuml "Biểu đồ Use Case chức năng Customer Support Agent"
+left to right direction
+
+actor "Customer Support Agent" as CSA
+
+rectangle System {
+  usecase "Report Management" as UC1
+  usecase "Log in" as UC2
+  usecase "User management" as UC3
+  usecase "Resolve Queries" as UC4
+}
+
+CSA --> UC1
+CSA --> UC2
+CSA --> UC4
+
+UC2 --> UC3 : <<include>>
+
+@enduml
+
+</details>
+
+#### Chức năng Appraisers
+
+<details>
+
+<summary>Code PlantUML</summary
+
+@startuml  "Biểu đồ Use Case chức năng Customer Support Appraisers"
+left to right direction
+
+actor "Appraisers" as App
+
+rectangle System {
+  usecase "Report Management" as UC1
+  usecase "Log in" as UC2
+  usecase "User management" as UC3
+  usecase "Communicate" as UC4
+  usecase "Appraisal" as UC5
+  usecase "List Items" as UC6
+  usecase "Browse Listings" as UC7
+}
+
+App --> UC1
+App --> UC2
+App --> UC4
+App --> UC5
+
+UC2 --> UC3 : <<include>>
+UC5 --> UC6 : <<extend>>
+UC6 --> UC7 : <<extend>>
+
+@enduml
+
+</details>
+
+### Quy trình hoạt động
+
+#### Quy trình mua hàng
+
+<details>
+
+<summary>Code PlantUML</summary
+
+@startuml "Biểu Đồ Quy trình mua hàng" 
+|Customer|
+start
+:Chọn sản phẩm;
+:Thêm vào giỏ hàng;
+
+|System|
+:Hiển thị giỏ hàng;
+
+|Customer|
+:Kiểm tra giỏ hàng;
+:Nhập thông tin giao hàng;
+:Chọn phương thức thanh toán;
+
+|System|
+:Kiểm tra thanh toán;
+if ("Thanh toán thành công?") then (Yes)
+  :Xác nhận đơn hàng;
+  :Cập nhật kho;
+  :Gửi thông báo cho khách hàng;
+else (No)
+  :Thông báo lỗi;
+
+  |Customer|
+  :Chọn lại phương thức thanh toán;
+  :Chọn phương thức thanh toán;
+endif
+
+stop
+@enduml
+
+</details>
+
+#### Quy trình bán hàng
+
+<details>
+
+<summary>Code PlantUML</summary
+
+@startuml
+|Khách hàng| "Biểu Đồ Quy trình bán hàng" 
+start
+:Đăng nhập hệ thống;
+:Chọn sản phẩm;
+:Thêm vào giỏ hàng;
+:Đặt hàng;
+
+|Hệ thống|
+:Kiểm tra tồn kho;
+
+if (Sản phẩm có sẵn?) then (Có)
+  :Xác nhận đơn hàng;
+  :Xác nhận thanh toán;
+  |Khách hàng|
+  :Nhận thông báo đặt hàng;
+  :Nhận sản phẩm;
+else (Hết hàng)
+  |Hệ thống|
+  :Thông báo hết hàng;
+  |Khách hàng|
+  :Nhận thông báo hết hàng;
+endif
+
+@enduml
+
+</details>
+
+
+#### Quy trình thanh toán
+
+<details>
+
+<summary>Code PlantUML</summary
+
+@startuml   “ Biểu Đồ quy trình thanh toán”
+
+|Customer|
+start
+:Chọn sản phẩm/dịch vụ;
+:Thêm vào giỏ hàng;
+:Xác nhận giỏ hàng;
+:Chọn phương thức thanh toán;
+:Nhập thông tin thanh toán;
+:Xác nhận thanh toán;
+
+|System|
+:Kiểm tra thông tin thanh toán;
+if (Thông tin hợp lệ?) then (Có)
+  :Xử lý thanh toán;
+  if (Thanh toán thành công?) then (Có)
+    :Tạo đơn hàng;
+    :Gửi thông báo xác nhận cho Customer;
+  else (Không)
+    :Thông báo lỗi thanh toán;
+  endif
+else (Không)
+  :Thông báo thông tin không hợp lệ;
+endif
+
+stop
+@enduml
+
+</details>
+
+### Luồng xử lý
+
+#### Luồng xử lý đăng ký
+
+<details>
+
+<summary>Code PlantUML</summary
+
+@startuml “Biểu Đồ Luồng xử lý đăng ký”
+autonumber
+
+actor Khách as customer
+participant "Giao diện" as ui
+participant "Hệ thống" as system
+database CSDL as db
+
+system -> system: Tạo mã xác thực email
+system -> ui: Gửi email xác thực
+activate ui
+
+ui --> customer: Thông báo đăng ký thành công
+ui --> customer: Chuyển đến trang xác thực email
+deactivate ui
+
+customer -> ui: Truy cập form đăng ký
+customer -> ui: Điền thông tin (họ tên, email, SĐT, mật khẩu)
+ui -> system: Gửi thông tin đăng ký
+activate system
+
+system -> system: Kiểm tra thông tin
+
+alt Thông tin hợp lệ
+    system -> db: Lưu thông tin tài khoản
+    activate db
+    db --> system: Xác nhận lưu thành công
+    deactivate db
+
+system -> system: Tạo mã xác thực email
+system -> ui: Gửi email xác thực
+activate ui
+
+ui --> customer: Thông báo đăng ký thành công
+ui --> customer: Chuyển đến trang xác thực email
+deactivate ui
+
+else Thông tin không hợp lệ
+    system --> ui: Trả về lỗi
+    activate ui
+    ui --> customer: Hiển thị thông báo lỗi
+    deactivate ui
+end
+
+</details>
+
+#### Luồng xử lý mua
+
+<details>
+
+<summary>Code PlantUML</summary
+
+@startuml “Biểu Đồ Luồng xử lý mua”
+autonumber
+actor Buyer
+participant "Giao diện" as UI
+participant "Hệ thống" as System
+actor Seller
+
+Buyer -> UI: Chọn sản phẩm
+activate UI
+UI -> System: Lấy thông tin sản phẩm
+activate System
+System --> UI: Hiển thị chi tiết sản phẩm
+deactivate System
+deactivate UI
+
+Buyer -> UI: Thêm vào giỏ hàng
+Buyer -> UI: Chọn phương thức thanh toán
+activate UI
+UI -> System: Gửi yêu cầu đặt hàng
+activate System
+System -> Seller: Thông báo đơn hàng mới
+activate Seller
+
+Seller --> System: Xác nhận đơn hàng
+deactivate Seller
+System --> UI: Xác nhận đơn hàng thành công
+deactivate System
+
+UI --> Buyer: Hiển thị thông tin đơn hàng
+deactivate UI
+
+note right of Seller
+  Seller sẽ xử lý và gửi hàng sau
+end note
+
+@enduml
+
+</details>
+
+
+#### Luồng xử lý POST
+
+<details>
+
+<summary>Code PlantUML</summary
+
+@startuml “Biểu Đồ Luồng xử lý POST”
+participant Seller
+participant "Giao diện" as UI
+participant "Hệ thống" as System
+database "Database (Watches)" as DB
+
+Seller -> UI: 1. Mở form đăng sản phẩm
+UI --> Seller: 2. Hiển thị form
+Seller -> UI: 3. Nhập thông tin watch + ảnh
+UI -> System: 4. Gửi yêu cầu đăng sản phẩm (POST /watches)
+System -> DB: 5. Lưu watch vào bảng watches
+DB --> System: 6. Trả watch_id
+System --> UI: 7. Xác nhận đăng bán thành công
+UI --> Seller: 8. Hiển thị thông báo "Đã đăng bán"
+
+@enduml
+
+</details>
+
+#### Luồng xử lý Admin
+
+<details>
+
+<summary>Code PlantUML</summary
+
+@startuml “Biểu Đồ Luồng xử lý POST”
+participant Seller
+participant "Giao diện" as UI
+participant "Hệ thống" as System
+database "Database (Watches)" as DB
+
+Seller -> UI: 1. Mở form đăng sản phẩm
+UI --> Seller: 2. Hiển thị form
+Seller -> UI: 3. Nhập thông tin watch + ảnh
+UI -> System: 4. Gửi yêu cầu đăng sản phẩm (POST /watches)
+System -> DB: 5. Lưu watch vào bảng watches
+DB --> System: 6. Trả watch_id
+System --> UI: 7. Xác nhận đăng bán thành công
+UI --> Seller: 8. Hiển thị thông báo "Đã đăng bán"
+
+@enduml
+
+</details>
+
+#### Luồng xử lý Định giá
+
+<details>
+
+<summary>Code PlantUML</summary
+
+@startuml “Biểu Đồ Luồng xử lý Định giá”
+participant Seller
+participant "Giao diện" as UI
+participant "Hệ thống" as System
+participant Appraiser
+database "Database (Appraisals)" as DB
+
+Seller -> UI: 1. Gửi yêu cầu thẩm định cho Watch X
+UI -> System: 2. Gửi request thẩm định
+System -> Appraiser: 3. Thông báo/assign request tới Appraiser (notification)
+Appraiser -> System: 4. Lấy thông tin Watch để thẩm định
+Appraiser -> System: 5. Gửi kết quả thẩm định (value, note, status)
+System -> DB: 6. Lưu appraisal record
+DB --> System: 7. Trả kết quả lưu
+System --> UI: 8. Thông báo kết quả thẩm định
+UI -> Seller: 9. Cập nhật giá/ghi chú hiển thị
+
+@enduml
+
+</details>
+
+#### Luồng xử lý Feedback
+
+<details>
+
+<summary>Code PlantUML</summary
+
+@startuml “Biểu Đồ Luồng xử lý Feedback”
+participant Buyer
+participant "Giao diện" as UI
+participant "Hệ thống" as System
+participant Seller
+database "Database (Feedback)" as DB
+
+Buyer -> UI: 1. Viết feedback cho Seller/Watch
+UI -> System: 2. Gửi feedback (POST /feedback)
+System -> DB: 3. Lưu feedback (sender, receiver, content, rating)
+DB --> System: 4. Trả feedback_id
+System --> UI: 5. Xác nhận "Cảm ơn bạn đã đánh giá"
+System -> Seller: 6. Thông báo có feedback mới (notification)
+Seller -> System: 7. (tùy) Xem/Phản hồi feedback
+
+</details>
+
+#### Luồng xử lý payment
+
+<details>
+
+<summary>Code PlantUML</summary
+
+@startuml “Biểu Đồ Luồng xử lý payment”
+participant Buyer
+participant UI
+participant System
+participant "Payment Gateway" as PG
+participant "Escrow Service" as ES
+participant Seller
+database "Database (Orders/Tx/Escrow)" as DB
+
+Buyer -> UI: 1. Chọn đơn hàng để thanh toán
+UI -> System: 2. Gửi yêu cầu thanh toán (order_id)
+System -> DB: 3. Kiểm tra đơn hàng (status = Pending)
+DB --> System: 4. Trả thông tin đơn hàng
+System -> PG: 5. Gửi yêu cầu thanh toán (amount, buyer info)
+PG --> System: 6. Xác nhận giao dịch thành công
+System -> ES: 7. Tạo tài khoản ký quỹ (escrow record)
+ES -> DB: 8. Lưu giao dịch escrow (order_id, amount, status=HOLD)
+DB --> ES: 9. OK
+ES --> System: 10. Xác nhận lưu ký quỹ
+System --> UI: 11. Thông báo "Thanh toán thành công - đang giữ tiền"
+UI -> Buyer: 12. Thông báo có đơn hàng đã được thanh toán (đang ký quỹ)
+note right of ES
+Tiền sẽ được giữ phòng cho Seller
+sau khi Buyer xác nhận nhận hàng
+hoặc sau thời gian bảo đảm
+end note
+
+</details>
+
+#### Luồng dữ liệu
+
+<details>
+
+<summary>Code PlantUML</summary
+
+@startuml “Biểu Đồ Luồng Dữ liệu”
+skinparam linetype ortho
+
+actor Seller
+actor Appraiser
+actor Buyer
+actor Admin
+
+rectangle "1.0 Quản lý Tài khoản" as AccountManagement
+rectangle "5.0 Quản lý Hệ thống" as SystemManagement
+rectangle "3.0 Quản lý Thanh toán" as PaymentManagement
+rectangle "4.0 Quản lý Thẩm định" as AppraisalManagement
+rectangle "2.0 Quản lý Đơn hàng" as OrderManagement
+
+database "D1 Users" as UsersDB
+database "D2 Orders" as OrdersDB
+database "D3 Transactions" as TransactionsDB
+database "D4 Escrow" as EscrowDB
+database "D5 Appraisals" as AppraisalsDB
+
+' ------------------ User Interactions ------------------
+
+Seller --> OrderManagement: Đăng bán sản phẩm
+Appraiser --> AppraisalManagement: Cập nhật kết quả thẩm định
+Buyer --> PaymentManagement: Thanh toán
+Buyer --> SystemManagement: Đăng ký / Đăng nhập
+Admin --> SystemManagement: Đăng ký / Đăng nhập
+Admin --> SystemManagement: Quản lý User/Order/Transaction
+
+' ------------------ System Flow ------------------
+
+Seller --> AppraisalManagement: Yêu cầu thẩm định
+Appraiser --> AppraisalManagement
+AppraisalManagement --> AppraisalsDB: Đọc/Ghi
+AppraisalManagement --> OrderManagement: Cập nhật tình trạng đơn hàng
+
+Buyer --> AppraisalManagement: Yêu cầu thẩm định
+Buyer --> OrderManagement: Đặt hàng
+Seller --> OrderManagement: Xem trạng thái đơn hàng
+OrderManagement --> OrdersDB: Đọc/Ghi đơn hàng
+
+Buyer --> PaymentManagement: Thanh toán
+PaymentManagement --> TransactionsDB: Ghi transaction
+PaymentManagement --> EscrowDB: Tạo Escrow
+
+SystemManagement --> AccountManagement
+SystemManagement --> PaymentManagement
+SystemManagement --> AppraisalManagement
+SystemManagement --> OrderManagement
+SystemManagement --> UsersDB: Đọc/Ghi thông tin user
+
+Buyer <-- PaymentManagement: Nhận tiền sau Escrow Released
+
+@enduml
+
+</details>
+
+### Các trạng thái thực thể trong hệ thống
+
+## I. Tổng quan dự án
+
+###  Yêu cầu phi chức năng
+
+#### 1. Hiệu suất
+
+- Thời gian tải trang không quá 3 giây
+
+- Thời gian phản hồi API không quá 1 giây
+
+- Hỗ trợ đồng thời ít nhất 30 người dùng
+
+- Tối ưu hóa hình ảnh và tài nguyên
+
+#### 2. Bảo mật
+
+Mã hóa dữ liệu nhạy cảm trong cơ sở dữ liệu
+
+Bảo vệ chống tấn công SQL Injection
+
+Logging đầy đủ các hoạt động quan trọng
+
+Backup dữ liệu định kỳ
+
+#### 3. Khả năng mở rộng
+
+Kiến trúc module hóa, dễ thêm tính năng mới
+
+Khả năng tích hợp với các hệ thống bên thứ ba
+
+Dễ dàng nâng cấp phiên bản
+
+Documentation đầy đủ cho developers
+
+#### 4. Giao diện người dùng
+
+Thiết kế phù hợp cho mọi kích thước màn hình
+
+Thời gian học sử dụng không quá 30 phút
+
+Giao diện nhất quán trên toàn bộ hệ thống
+
+#### 5. Tương thích
+
+Hoạt động trên các trình duyệt phổ biến (Chrome, Firefox, Safari, Edge)
+
+Hỗ trợ các phiên bản trình duyệt từ 2 năm trở lại
+
+Tối ưu cho kết nối mạng chậm
+
+#### 6. Độ tin cậy
+
+Uptime tối thiểu 99.9%
+
+Thời gian phục hồi sau sự cố < 4 giờ
+
+Backup dữ liệu hàng ngày
+
+Có phương án dự phòng khi hệ thống gặp sự cố
+
+#### 7. Khả năng bảo trì
+
+Code được viết theo chuẩn clean code
+
+Tài liệu kỹ thuật chi tiết
+
+Dễ dàng rollback khi cần thiết
+
+## IV. Công nghệ:
+
+Frontend: Sử dụng ReactJS để xây dựng giao diện người dùng.
+
+Backend: Sử dụng python để phát triển các dịch vụ backend.
+
+API: Sử dụng chuẩn REST API flask để giao tiếp giữa frontend và backend.
+
+Cơ sở dữ liệu: Sử dụng MS SQL để lưu trữ dữ liệu.
+
+Bảo mật: 
+
+Thông báo: 
+
+Triển khai: Sử dụng Docker để đóng gói và triển khai ứng dụng.
+
+Quản lý mã nguồn: Sử dụng Git để quản lý mã nguồn và GitHub để lưu trữ ma nguồn.
