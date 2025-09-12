@@ -1023,3 +1023,9 @@ Giao diện người dùng sẽ bao gồm các trang sau:
 * ***Trang Admin:*** Hiển thị thông tin người dùng trang,cho phép truy cập vào thông tin cá nhân của người mua và bán,giải quyết tranh chấp giữa người mua và bán.
 
 * ***Trang Customer Support Agent:*** Hiển thị thông tin người mua, hỗ trợ người mua sản phẩm,hỗ trợ hoàn trả và thanh toán sản phẩm.
+
+
+
+# ĐỌC THÊM THÔNG TIN
+* D.G: https://app.diagrams.net/#G1AA7oK1_PDVFT2Sy14hX4OEY3EGWhxbLd#%7B%22pageId%22%3A%22_Q-3XWHcFOVNEftrYJNM%22%7D
+* CONFERENCE: https://kocoemail610-1756521291561.atlassian.net/wiki/pages/resumedraft.action?draftId=66097&draftShareId=726fa3bb-82d4-458b-94b2-c9b804529156
