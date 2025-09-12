@@ -66,7 +66,7 @@ Admin --> UC6
 
 ## Các chức năng chính
 
-*** Sellers: ***
+***Sellers:***
 
 - Đăng sản phẩm: Cho phép người bán thêm thông tin sản phẩm gồm hình ảnh, mô tả, năm sản xuất, hãng, tình trạng, giá.
 
@@ -78,7 +78,7 @@ Admin --> UC6
 
 - Xem trạng thái giao dịch: Theo dõi tình hình đơn hàng và phản hồi của người mua.
 
-*** Buyer: ***
+***Buyer:***
 
 - Tìm kiếm sản phẩm: Lọc theo hãng, giá, tình trạng, năm sản xuất.
 
@@ -92,7 +92,7 @@ Admin --> UC6
 
 - Đánh giá: Đưa ra nhận xét về sản phẩm và người bán.
 
-*** Appraisers: ***
+***Appraisers:***
 
 - Xem yêu cầu thẩm định: Truy cập danh sách sản phẩm cần kiểm định.
 
@@ -100,7 +100,7 @@ Admin --> UC6
 
 - Tạo báo cáo: Gửi báo cáo thẩm định gồm tính xác thực, giá trị thị trường, đề xuất giá.
 
-*** Admin: ***
+***Admin:***
 
 - Quản lý tài khoản: Phê duyệt chuyên gia, quản lý người bán và người mua.
 
@@ -110,7 +110,7 @@ Admin --> UC6
 
 - Quản lý hệ thống: Kiểm tra nhật ký, cập nhật phần mềm, đảm bảo an toàn dữ liệu.
 
-*** Customer Support Agents: ***
+***Customer Support Agents:***
 
 - Tiếp nhận yêu cầu: Nhận thắc mắc và sự cố từ người dùng.
 
