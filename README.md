@@ -261,6 +261,8 @@ UC7 --> UC8 : <<include>>
 
 </details>
 
+![Biểu đồ tác nhân](DOC/Diagram/bieudousecasebuyer.png)
+
 #### Chức năng Customer supports Agent
 
 <details>
@@ -289,6 +291,8 @@ UC2 --> UC3 : <<include>>
 
 </details>
 
+![Biểu đồ tác nhân](DOC/Diagram/bieudousecaseagent.png)
+
 #### Chức năng Administrator
 
 <details>
@@ -316,6 +320,9 @@ UC2 --> UC3 : <<include>>
 @enduml
 
 </details>
+
+![Biểu đồ tác nhân](DOC/Diagram/bieudousecaseadmin.png)
+
 
 #### Chức năng Appraisers
 
@@ -350,6 +357,8 @@ UC6 --> UC7 : <<extend>>
 @enduml
 
 </details>
+
+![Biểu đồ tác nhân](DOC/Diagram/bieudousecaseappraiser.png)
 
 ### Quy trình hoạt động
 
@@ -392,6 +401,8 @@ stop
 
 </details>
 
+![Biểu đồ tác nhân](DOC/Diagram/quytrinhmuahang.png)
+
 #### Quy trình bán hàng
 
 <details>
@@ -426,6 +437,7 @@ endif
 
 </details>
 
+![Biểu đồ tác nhân](DOC/Diagram/quytrinhbanhang.png)
 
 #### Quy trình thanh toán
 
@@ -462,6 +474,8 @@ stop
 @enduml
 
 </details>
+
+![Biểu đồ tác nhân](DOC/Diagram/quytrinhthanhtoan.png)
 
 ### Luồng xử lý
 
@@ -517,6 +531,8 @@ end
 
 </details>
 
+![Biểu đồ tác nhân](DOC/Diagram/Luongxulydangki.png)
+
 #### Luồng xử lý mua
 
 <details>
@@ -562,6 +578,7 @@ end note
 
 </details>
 
+![Biểu đồ tác nhân](DOC/Diagram/luongxulymua.png)
 
 #### Luồng xử lý POST
 
@@ -588,6 +605,8 @@ UI --> Seller: 8. Hiển thị thông báo "Đã đăng bán"
 
 </details>
 
+![Biểu đồ tác nhân](DOC/Diagram/luongxulypost.png)
+
 #### Luồng xử lý Admin
 
 <details>
@@ -612,6 +631,8 @@ UI --> Seller: 8. Hiển thị thông báo "Đã đăng bán"
 @enduml
 
 </details>
+
+![Biểu đồ tác nhân](DOC/Diagram/Luongxulyadmin.png)
 
 #### Luồng xử lý Định giá
 
@@ -640,6 +661,8 @@ UI -> Seller: 9. Cập nhật giá/ghi chú hiển thị
 
 </details>
 
+![Biểu đồ tác nhân](DOC/Diagram/luongxulydanhgia.png)
+
 #### Luồng xử lý Feedback
 
 <details>
@@ -662,6 +685,9 @@ System -> Seller: 6. Thông báo có feedback mới (notification)
 Seller -> System: 7. (tùy) Xem/Phản hồi feedback
 
 </details>
+
+
+![Biểu đồ tác nhân](DOC/Diagram/luongxulyfeedback.png)
 
 #### Luồng xử lý payment
 
@@ -697,6 +723,8 @@ hoặc sau thời gian bảo đảm
 end note
 
 </details>
+
+![Biểu đồ tác nhân](DOC/Diagram/luongxulypayment.png)
 
 #### Luồng dữ liệu
 
@@ -761,7 +789,48 @@ Buyer <-- PaymentManagement: Nhận tiền sau Escrow Released
 
 </details>
 
+![Biểu đồ tác nhân](DOC/Diagram/luongdulieu.png)
+
 ### Các trạng thái thực thể trong hệ thống
+
+<details>
+
+<summary>Code PlantUML</summary
+
+@startuml “ Biểu đồ Các trạng thái thực thể trong hệ thống”
+state "Draft" as Draft
+state "PendingEvaluation" as PendingEvaluation
+state "UnderEvaluation" as UnderEvaluation
+state "Evaluated" as Evaluated
+state "ListedForSale" as ListedForSale
+state "Reserved" as Reserved
+state "Shipped" as Shipped
+state "Disputed" as Disputed
+state "Completed" as Completed
+state "Cancelled" as Cancelled
+
+[*] --> Draft
+
+Draft --> PendingEvaluation: Gửi yêu cầu thẩm định
+PendingEvaluation --> UnderEvaluation: Chuyên gia nhận kiểm định
+UnderEvaluation --> Evaluated: Gửi báo cáo thẩm định
+Evaluated --> ListedForSale: Người bán niêm yết sản phẩm
+ListedForSale --> Reserved: Người mua đặt hàng + thanh toán
+Reserved --> Shipped: Người bán giao hàng
+Shipped --> Completed: Người mua xác nhận nhận hàng
+Shipped --> Disputed: Khiếu nại
+Reserved --> Disputed: Khiếu nại
+Disputed --> Completed: Admin xử lý thành công
+Disputed --> Cancelled: Admin hủy giao dịch
+Reserved --> Cancelled: Hủy giao dịch
+ListedForSale --> Cancelled: Người bán hủy niêm yết
+Completed --> []
+Cancelled --> []
+@enduml
+
+</details>
+
+![Biểu đồ tác nhân](DOC/Diagram/cactrangthaithuctehethong.png)
 
 ## I. Tổng quan dự án
 
@@ -874,6 +943,8 @@ database "Database" as DB
 
 </details>
 
+
+
 Mô hình kiến trúc của hệ thống sẽ bao gồm các thành phần sau:
 
 * ***Client:*** Giao diện người dùng, xây dựng bằng ReactJS, kết nối với API để lấy dữ liệu.
@@ -888,6 +959,7 @@ Mô hình kiến trúc của hệ thống sẽ bao gồm các thành phần sau:
 
 * ***Database:*** Cơ sở dữ liệu MS SQL Server, lưu trữ thông tin người dùng, lịch hẹn, dịch vụ...
 
+![Biểu đồ tác nhân](DOC/Diagram/database.png)
 
 ### Mô hình cơ sở dữ liệu:
 
@@ -991,6 +1063,9 @@ Appraisal "1" -- "1" User : appraiser_id
 @enduml
 
 </details>
+
+![Biểu đồ tác nhân](DOC/Diagram/mohinhcosodulieu.png)
+
 
 * ***Users:*** Lưu thông tin người dùng, bao gồm tên, email, mật khẩu, quyền...
 
