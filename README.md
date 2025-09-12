@@ -864,7 +864,7 @@ Mô hình kiến trúc của hệ thống sẽ bao gồm các thành phần sau:
 
 * ***Database:*** Cơ sở dữ liệu MS SQL Server, lưu trữ thông tin người dùng, lịch hẹn, dịch vụ...
 
-![Biểu đồ tác nhân](DOC/Diagram/database.png)
+
 <details>
 
 <summary>Code PlantUML</summary
@@ -889,6 +889,8 @@ database "Database" as DB
 @enduml
 
 </details>
+
+![Biểu đồ tác nhân](DOC/Diagram/database.png)
 
 ### Mô hình cơ sở dữ liệu:
 
